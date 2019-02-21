@@ -39,27 +39,6 @@ services:
     - ldap-server
     - oidc-keycloak:keycloak
 
-  cucumber:
-    image: conjur-dev
-    entrypoint: sleep
-    command: infinity
-    environment:
-      LDAP_URI: ldap://ldap-server:389
-      LDAP_BASE: dc=conjur,dc=net
-      CONJUR_APPLIANCE_URL: http://conjur:3000
-      DATABASE_URL: postgres://postgres@pg/postgres
-      CONJUR_ADMIN_PASSWORD: admin
-      CONJUR_DATA_KEY:
-      RAILS_ENV:
-    volumes:
-      - ..:/src/conjur-server
-      - authn-local:/run/authn-local
-      - ../ci/ldap-certs:/ldap-certs:ro
-    links:
-      - conjur
-      - pg
-      - testdb
-
   client:
     image: cyberark/conjur-cli:5
     entrypoint: sleep
