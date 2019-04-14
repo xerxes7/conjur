@@ -1,4 +1,7 @@
 version: "3"
+networks:
+  demo:
+
 services:
   pg:
     image: postgres:9.4
@@ -11,14 +14,79 @@ services:
     environment:
       POSTGRES_PASSWORD: postgres_secret
 
+  etcd1:
+    image: patroni
+    networks: [ demo ]
+    env_file: docker/etcd.env
+    container_name: demo-etcd1
+    hostname: etcd1
+    command: etcd -name etcd1 -initial-advertise-peer-urls http://etcd1:2380
+
+  etcd2:
+    image: patroni
+    networks: [ demo ]
+    env_file: docker/etcd.env
+    container_name: demo-etcd2
+    hostname: etcd2
+    command: etcd -name etcd2 -initial-advertise-peer-urls http://etcd2:2380
+
+  etcd3:
+    image: patroni
+    networks: [ demo ]
+    env_file: docker/etcd.env
+    container_name: demo-etcd3
+    hostname: etcd3
+    command: etcd -name etcd3 -initial-advertise-peer-urls http://etcd3:2380
+
+  patroni1:
+    image: patroni
+    networks: [ demo ]
+    env_file: docker/patroni.env
+    hostname: patroni1
+    container_name: demo-patroni1
+    environment:
+      PATRONI_NAME: patroni1
+
+  patroni2:
+    image: patroni
+    networks: [ demo ]
+    env_file: docker/patroni.env
+    hostname: patroni2
+    container_name: demo-patroni2
+    environment:
+      PATRONI_NAME: patroni2
+
+  patroni3:
+    image: patroni
+    networks: [ demo ]
+    env_file: docker/patroni.env
+    hostname: patroni3
+    container_name: demo-patroni3
+    environment:
+      PATRONI_NAME: patroni3
+
+  haproxy:
+    image: patroni
+    networks: [ demo ]
+    env_file: docker/patroni.env
+    hostname: haproxy
+    container_name: demo-haproxy
+    ports:
+      - "5000:5000"
+      - "5001:5001"
+    command: haproxy
+
   conjur:
     build:
       context: ../
       dockerfile: dev/Dockerfile.dev
     image: conjur-dev
+    networks: [ demo ]
     environment:
       CONJUR_APPLIANCE_URL: http://localhost:3000
-      DATABASE_URL: postgres://postgres@pg/postgres
+      DATABASE_URL: postgres://postgres@haproxy/postgres
+      PGPASSWORD: postgres
+      PGPORT: 5000
       CONJUR_ADMIN_PASSWORD: admin
       CONJUR_ACCOUNT: cucumber
       CONJUR_PASSWORD_ALICE: secret
@@ -37,7 +105,7 @@ services:
     - ../ci/ldap-certs:/ldap-certs:ro
     - ../ci/authn-oidc/phantomjs:/authn-oidc/phantomjs/scripts
     links:
-    - pg:pg
+    - haproxy
     - ldap-server
     - oidc-keycloak:keycloak
 

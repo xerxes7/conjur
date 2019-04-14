@@ -18,8 +18,10 @@ def connect
   def test_select
     fail "DATABASE_URL not set" unless ENV['DATABASE_URL']
     begin
+      puts 'XXX'
       db = Sequel::Model.db = Sequel.connect(ENV['DATABASE_URL'])
       db['select 1'].first
+      puts 'YYY'
     rescue
       false
     end

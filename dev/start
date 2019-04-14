@@ -80,9 +80,11 @@ fi
 
 export CONJUR_DATA_KEY="$(cat data_key)"
 
-services="pg conjur"
+services="etcd1 etcd2 etcd3 patroni1 patroni2 patroni3 haproxy conjur"
 docker-compose up -d --no-deps $services
 docker-compose exec conjur bundle
+echo "Press any key to continue..."
+read -n 1
 docker-compose exec conjur conjurctl db migrate
 docker-compose exec conjur conjurctl account create cucumber || true
 

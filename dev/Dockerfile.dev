@@ -18,7 +18,8 @@ RUN apt-get update -y && \
     vim \
     curl \
     jq \
-    tzdata
+    tzdata \
+    iputils-ping
 
 RUN echo Installing phantomjs && \
     apt-get update -y && \
