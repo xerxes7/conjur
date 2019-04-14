@@ -16,7 +16,6 @@ services:
 
   etcd1:
     image: patroni
-    networks: [ demo ]
     env_file: docker/etcd.env
     container_name: demo-etcd1
     hostname: etcd1
@@ -24,7 +23,6 @@ services:
 
   etcd2:
     image: patroni
-    networks: [ demo ]
     env_file: docker/etcd.env
     container_name: demo-etcd2
     hostname: etcd2
@@ -32,7 +30,6 @@ services:
 
   etcd3:
     image: patroni
-    networks: [ demo ]
     env_file: docker/etcd.env
     container_name: demo-etcd3
     hostname: etcd3
@@ -40,7 +37,6 @@ services:
 
   patroni1:
     image: patroni
-    networks: [ demo ]
     env_file: docker/patroni.env
     hostname: patroni1
     container_name: demo-patroni1
@@ -49,7 +45,6 @@ services:
 
   patroni2:
     image: patroni
-    networks: [ demo ]
     env_file: docker/patroni.env
     hostname: patroni2
     container_name: demo-patroni2
@@ -58,7 +53,6 @@ services:
 
   patroni3:
     image: patroni
-    networks: [ demo ]
     env_file: docker/patroni.env
     hostname: patroni3
     container_name: demo-patroni3
@@ -67,7 +61,6 @@ services:
 
   haproxy:
     image: patroni
-    networks: [ demo ]
     env_file: docker/patroni.env
     hostname: haproxy
     container_name: demo-haproxy
@@ -81,10 +74,9 @@ services:
       context: ../
       dockerfile: dev/Dockerfile.dev
     image: conjur-dev
-    networks: [ demo ]
     environment:
       CONJUR_APPLIANCE_URL: http://localhost:3000
-      DATABASE_URL: postgres://postgres@haproxy/postgres
+      DATABASE_URL: postgres://postgres@haproxy:5000/postgres
       PGPASSWORD: postgres
       PGPORT: 5000
       CONJUR_ADMIN_PASSWORD: admin
