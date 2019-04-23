@@ -101,6 +101,38 @@ services:
     - ldap-server
     - oidc-keycloak:keycloak
 
+  conjur2:
+    build:
+      context: ../
+      dockerfile: dev/Dockerfile.dev
+    image: conjur-dev
+    environment:
+      CONJUR_APPLIANCE_URL: http://localhost:3001
+      DATABASE_URL: postgres://postgres@haproxy:5000/postgres
+      PGPASSWORD: postgres
+      PGPORT: 5000
+      CONJUR_ADMIN_PASSWORD: admin
+      CONJUR_ACCOUNT: cucumber
+      CONJUR_PASSWORD_ALICE: secret
+      CONJUR_DATA_KEY:
+      RAILS_ENV:
+      AUDIT_DATABASE_URL:
+    ports:
+      - "3001:3001"
+      - "1235:1235"
+    expose:
+      - "3001"
+    volumes:
+      - ..:/src/conjur-server
+      - ../../conjur-policy-parser:/src/conjur-policy-parser
+      - authn-local:/run/authn-local
+      - ../ci/ldap-certs:/ldap-certs:ro
+      - ../ci/authn-oidc/phantomjs:/authn-oidc/phantomjs/scripts
+    links:
+      - haproxy
+      - ldap-server
+      - oidc-keycloak:keycloak
+
   cucumber:
     image: conjur-dev
     entrypoint: sleep

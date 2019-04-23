@@ -80,14 +80,21 @@ fi
 
 export CONJUR_DATA_KEY="$(cat data_key)"
 
-services="etcd1 etcd2 etcd3 patroni1 patroni2 patroni3 haproxy conjur"
+services="etcd1 etcd2 etcd3 patroni1 patroni2 patroni3 haproxy conjur conjur2"
 docker-compose up -d --no-deps $services
+docker-compose exec conjur bundle
+
+
 docker-compose exec conjur bundle
 echo "Press any key to continue..."
 read -n 1
 docker-compose exec conjur conjurctl db migrate
 docker-compose exec conjur conjurctl account create cucumber || true
-
+echo "Press any key to continue..."
+read -n 1
+docker-compose exec conjur2 bundle
+#docker-compose exec conjur2 conjurctl db migrate
+docker-compose exec conjur2 conjurctl account create cucumber || true
 enabled_authenticators="authn"
 
 env_args=
