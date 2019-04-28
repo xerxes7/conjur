@@ -8,6 +8,7 @@ module Authentication
       enabled_authenticators: ENV['CONJUR_AUTHENTICATORS'],
       token_factory:          TokenFactory.new,
       validate_security:      ::Authentication::ValidateSecurity.new,
+      validate_webservice:    ::Authentication::ValidateWebService.new,
       validate_origin:        ::Authentication::ValidateOrigin.new,
       audit_event:            ::Authentication::AuditEvent.new
     },
