@@ -6,10 +6,9 @@ module Authentication
   ValidateSecurity = CommandClass.new(
     dependencies: {
       role_class: ::Authentication::MemoizedRole,
-      webservice_resource_class: ::Resource,
       logger: Rails.logger
     },
-    inputs: %i(webservice account user_id enabled_authenticators)
+    inputs: %i(webservice account user_id)
   ) do
 
     def call
@@ -17,8 +16,6 @@ module Authentication
       return if default_conjur_authn?
 
       validate_account_exists
-      validate_webservice_is_whitelisted
-      validate_webservice_exists
       validate_user_is_defined
       validate_user_has_access
     end
@@ -32,15 +29,6 @@ module Authentication
 
     def validate_account_exists
       raise AccountNotDefined, @account unless account_admin_role
-    end
-
-    def validate_webservice_exists
-      raise ServiceNotDefined, @webservice.name unless webservice_resource
-    end
-
-    def validate_webservice_is_whitelisted
-      is_whitelisted = whitelisted_webservices.include?(@webservice)
-      raise NotWhitelisted, @webservice.name unless is_whitelisted
     end
 
     def validate_user_is_defined
@@ -67,21 +55,6 @@ module Authentication
 
     def account_admin_role
       @role_class["#{@account}:user:admin"]
-    end
-
-    def webservice_resource
-      @webservice_resource_class[webservice_resource_id]
-    end
-
-    def webservice_resource_id
-      @webservice.resource_id
-    end
-
-    def whitelisted_webservices
-      ::Authentication::Webservices.from_string(
-        @account,
-        @enabled_authenticators || Authentication::Common.default_authenticator_name
-      )
     end
   end
 end

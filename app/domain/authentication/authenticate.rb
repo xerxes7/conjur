@@ -16,6 +16,7 @@ module Authentication
 
     def call
       validate_authenticator_exists
+      validate_webservice
       validate_security
       validate_credentials
       validate_origin
@@ -42,13 +43,18 @@ module Authentication
 
     def validate_security
       @validate_security.(
-        webservice: @authenticator_input.webservice,
+          webservice: @authenticator_input.webservice,
           account: @authenticator_input.account,
-          user_id: @authenticator_input.username,
-          enabled_authenticators: @enabled_authenticators
+          user_id: @authenticator_input.username
       )
     end
 
+    def validate_webservice
+      @validate_webservice.(
+        webservice: @authenticator_input.webservice,
+        enabled_authenticators: @enabled_authenticators
+      )
+    end
     def validate_origin
       @validate_origin.(input: @authenticator_input)
     end
