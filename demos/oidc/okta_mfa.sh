@@ -39,7 +39,6 @@ redirect_uri="http://locallhost.com/"
 
 echo "Fetching ID Token using sessionToken ${sessionToken}"
 
-#raw=`curl -s -v -H "Content-Type: application/json" -d "{\"client_id\": \"${client_id}\"}" ${orgUrl}/oauth2/v1/authorize`
 url=$(printf "%s/oauth2/v1/authorize?sessionToken=%s&client_id=%s&scope=openid+email&response_type=id_token&response_mode=fragment&nonce=%s&redirect_uri=%s&state=%s" \
       $orgUrl \
       $sessionToken \
@@ -52,5 +51,4 @@ raw=`curl -s -v  ${url} 2>&1`
 
 echo "ID Token of the user"
 id_token=$(echo "${raw}" | egrep -o '^< Location: .*id_token=[[:alnum:]_\.\-]*' | cut -d \= -f 2)
-#id_token=$(echo ${raw} | grep "Location")
 echo ${id_token}
