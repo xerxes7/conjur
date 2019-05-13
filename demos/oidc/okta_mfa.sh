@@ -10,15 +10,15 @@ read -e -p "`echo -e '\nPlease enter OKTA url [https://dev-842018.oktapreview.co
 echo "Doing primary authentication..."
 orgUrl="${orgUrl:-${default_orgUrl}}"
 raw=`curl -s -H "Content-Type: application/json" -d "{\"username\": \"${username}\", \"password\": \"${password}\"}" ${orgUrl}/api/v1/authn`
-#echo ${raw}
+echo ${raw}
 status=`echo ${raw} | jq -r '.status'`
 echo "status=${status}"
 stateToken=`echo $raw | jq -r '.stateToken'`
+pushFactorId=`echo $raw | jq -r '.["_embedded"].factors[0].id'`
 
 echo "Congratulations! You got a stateToken: ${stateToken} That's used in a multi-step authentication flow, like MFA."
 
 echo "Sending Okta Verify push notification..."
-pushFactorId="opfksy4llwO5FlSoL0h7"
 status="MFA_CHALLENGE"
 tries=0
 while [[ ${status} == "MFA_CHALLENGE" && ${tries} -lt 10 ]]
@@ -50,5 +50,5 @@ echo ${url}
 raw=`curl -s -v  ${url} 2>&1`
 
 echo "ID Token of the user"
-id_token=$(echo "${raw}" | egrep -o '^< Location: .*id_token=[[:alnum:]_\.\-]*' | cut -d \= -f 2)
+id_token=$(echo "${raw}" | egrep -o '.*ocation: .*id_token=[[:alnum:]_\.\-]*' | cut -d \= -f 2)
 echo ${id_token}
