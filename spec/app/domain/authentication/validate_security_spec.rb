@@ -49,8 +49,8 @@ RSpec.describe Authentication::Security::ValidateSecurity do
 
   # generates a Resource class which returns the provided object
   def resource_class(returned_resource)
-    double('Resource').tap do |resource|
-      allow(resource).to receive(:[]).and_return(returned_resource)
+    double('Resource').tap do |resource_class|
+      allow(resource_class).to receive(:[]).and_return(returned_resource)
     end
   end
 
@@ -76,7 +76,7 @@ RSpec.describe Authentication::Security::ValidateSecurity do
     subject do
       Authentication::Security::ValidateSecurity.new(
         role_class: full_access_role_class,
-        webservice_resource_class: full_access_resource_class
+        resource_class: full_access_resource_class
       ).(
         webservice: webservice('service1'),
           account: test_account,
@@ -94,7 +94,7 @@ RSpec.describe Authentication::Security::ValidateSecurity do
     subject do
       Authentication::Security::ValidateSecurity.new(
         role_class: full_access_role_class,
-        webservice_resource_class: full_access_resource_class
+        resource_class: full_access_resource_class
       ).(
         webservice: webservice('DOESNT_EXIST'),
           account: test_account,
@@ -112,7 +112,7 @@ RSpec.describe Authentication::Security::ValidateSecurity do
     subject do
       Authentication::Security::ValidateSecurity.new(
         role_class: full_access_role_class,
-        webservice_resource_class: no_access_resource_class
+        resource_class: no_access_resource_class
       ).(
         webservice: webservice('service1'),
           account: test_account,
@@ -130,7 +130,7 @@ RSpec.describe Authentication::Security::ValidateSecurity do
     subject do
       Authentication::Security::ValidateSecurity.new(
         role_class: nil_user_role_class,
-        webservice_resource_class: full_access_resource_class
+        resource_class: full_access_resource_class
       ).(
         webservice: webservice('service1'),
           account: test_account,
@@ -147,7 +147,7 @@ RSpec.describe Authentication::Security::ValidateSecurity do
     subject do
       Authentication::Security::ValidateSecurity.new(
         role_class: no_access_role_class,
-        webservice_resource_class: full_access_resource_class
+        resource_class: full_access_resource_class
       ).(
         webservice: webservice('service1'),
           account: test_account,
@@ -175,7 +175,7 @@ RSpec.describe Authentication::Security::ValidateSecurity do
         subject do
           Authentication::Security::ValidateSecurity.new(
             role_class: partial_access_role_class,
-            webservice_resource_class: accessible_resource_class
+            resource_class: accessible_resource_class
           ).(
             webservice: webservice('service1'),
               account: test_account,
@@ -193,7 +193,7 @@ RSpec.describe Authentication::Security::ValidateSecurity do
         subject do
           Authentication::Security::ValidateSecurity.new(
             role_class: partial_access_role_class,
-            webservice_resource_class: inaccessible_resource_class
+            resource_class: inaccessible_resource_class
           ).(
             webservice: webservice('service1'),
               account: test_account,
@@ -213,7 +213,7 @@ RSpec.describe Authentication::Security::ValidateSecurity do
     subject do
       Authentication::Security::ValidateSecurity.new(
         role_class: full_access_role_class,
-        webservice_resource_class: full_access_resource_class
+        resource_class: full_access_resource_class
       ).(
         webservice: default_authenticator_mock,
           account: test_account,
@@ -231,7 +231,7 @@ RSpec.describe Authentication::Security::ValidateSecurity do
     subject do
       Authentication::Security::ValidateSecurity.new(
         role_class: non_existing_account_role_class,
-        webservice_resource_class: full_access_resource_class
+        resource_class: full_access_resource_class
       ).(
         webservice: webservice('service1'),
           account: non_existing_account,
@@ -269,7 +269,7 @@ RSpec.describe Authentication::Security::ValidateSecurity do
       described_class
         .new(
           role_class: role_class,
-          webservice_resource_class: full_access_resource_class
+          resource_class: full_access_resource_class
         )
     end
     

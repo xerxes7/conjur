@@ -16,7 +16,7 @@ module Authentication
     ValidateSecurity = CommandClass.new(
       dependencies: {
         role_class: ::Role,
-        webservice_resource_class: ::Resource,
+        resource_class: ::Resource,
         logger: Rails.logger
       },
       inputs: %i(webservice account user_id enabled_authenticators)
@@ -80,7 +80,7 @@ module Authentication
       end
 
       def webservice_resource
-        @webservice_resource_class[webservice_resource_id]
+        @resource_class[webservice_resource_id]
       end
 
       def webservice_resource_id
