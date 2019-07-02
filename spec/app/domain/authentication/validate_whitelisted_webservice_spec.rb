@@ -9,14 +9,14 @@ RSpec.describe Authentication::Security::ValidateWhitelistedWebservice do
 
   def mock_webservice(resource_id)
     double('webservice').tap do |webservice|
+      allow(webservice).to receive(:authenticator_name)
+                             .and_return("some-string")
+
       allow(webservice).to receive(:name)
                              .and_return("some-string")
 
       allow(webservice).to receive(:resource_id)
                              .and_return(resource_id)
-
-      allow(webservice).to receive(:status_webservice)
-                             .and_return(mock_status_webservice(resource_id))
     end
   end
 
@@ -41,22 +41,17 @@ RSpec.describe Authentication::Security::ValidateWhitelistedWebservice do
     end
   end
 
-  def role_class(returned_role)
-    double('role_class').tap do |role|
-      allow(role).to receive(:roleid_from_username).and_return('some-role-id')
-      allow(role).to receive(:[]).and_return(returned_role)
+  def mock_role_class
+    double('role_class').tap do |role_class|
+      allow(role_class).to receive(:[])
+                             .with(/#{test_account}:user:admin/)
+                             .and_return("admin-role")
 
-      allow(role).to receive(:[])
-                       .with(/#{test_account}:user:admin/)
-                       .and_return(user_role(is_authorized: true))
-
-      allow(role).to receive(:[])
-                       .with(/#{non_existing_account}:user:admin/)
-                       .and_return(nil)
+      allow(role_class).to receive(:[])
+                             .with(/#{non_existing_account}:user:admin/)
+                             .and_return(nil)
     end
   end
-
-  let (:non_existing_account_role_class) { role_class(nil) }
 
   def webservices_dict(includes_authenticator:)
     double('webservices_dict').tap do |webservices_dict|
@@ -86,7 +81,7 @@ RSpec.describe Authentication::Security::ValidateWhitelistedWebservice do
   context "A whitelisted webservice" do
     subject do
       Authentication::Security::ValidateWhitelistedWebservice.new(
-        role_class: full_access_role_class,
+        role_class: mock_role_class,
         webservices_class: mock_webservices_class
       ).(
         webservice: mock_webservice("#{fake_authenticator_name}/service1"),
@@ -103,7 +98,7 @@ RSpec.describe Authentication::Security::ValidateWhitelistedWebservice do
   context "A un-whitelisted webservice" do
     subject do
       Authentication::Security::ValidateWhitelistedWebservice.new(
-        role_class: full_access_role_class,
+        role_class: mock_role_class,
         webservices_class: mock_webservices_class
       ).(
         webservice: mock_webservice("#{fake_authenticator_name}/service1"),
@@ -120,7 +115,7 @@ RSpec.describe Authentication::Security::ValidateWhitelistedWebservice do
   context "An ENV lacking CONJUR_AUTHENTICATORS" do
     subject do
       Authentication::Security::ValidateWhitelistedWebservice.new(
-        role_class: full_access_role_class,
+        role_class: mock_role_class,
         webservices_class: mock_webservices_class
       ).(
         webservice: default_authenticator_mock,
@@ -137,7 +132,7 @@ RSpec.describe Authentication::Security::ValidateWhitelistedWebservice do
   context "A non-existing account" do
     subject do
       Authentication::Security::ValidateWhitelistedWebservice.new(
-        role_class: non_existing_account_role_class,
+        role_class: mock_role_class,
         webservices_class: mock_webservices_class
       ).(
         webservice: mock_webservice("#{fake_authenticator_name}/service1"),
