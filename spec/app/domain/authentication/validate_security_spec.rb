@@ -59,9 +59,9 @@ RSpec.describe Authentication::Security::ValidateSecurity do
 
   let (:two_authenticator_env) { "#{fake_authenticator_name}/service1, #{fake_authenticator_name}/service2" }
 
-  let(:default_authenticator_mock) do
+  let(:authenticator_mock) do
     double('authenticator').tap do |authenticator|
-      allow(authenticator).to receive(:authenticator_name).and_return("authn")
+      allow(authenticator).to receive(:authenticator_name).and_return("authn-x")
     end
   end
 
@@ -73,44 +73,30 @@ RSpec.describe Authentication::Security::ValidateSecurity do
   let (:full_access_role_class) { role_class(user_role(is_authorized: true)) }
   let (:no_access_role_class) { role_class(user_role(is_authorized: false)) }
 
-  let(:validate_whitelisted_webservice) { double("ValidateWhitelistedWebservice") }
-  let(:validate_webservice_access) { double("ValidateWebserviceAccess") }
+  let(:mock_validate_whitelisted_webservice) { double("ValidateWhitelistedWebservice") }
+  let(:mock_validate_webservice_access) { double("ValidateWebserviceAccess") }
 
   before(:each) do
     allow(Authentication::Security::ValidateWhitelistedWebservice)
       .to receive(:new)
-            .and_return(validate_whitelisted_webservice)
+            .and_return(mock_validate_whitelisted_webservice)
+    allow(mock_validate_whitelisted_webservice).to receive(:call)
+                                                .and_return(true)
 
     allow(Authentication::Security::ValidateWebserviceAccess)
       .to receive(:new)
-            .and_return(validate_webservice_access)
-  end
-
-  def mock_whitelisted_webservice_validator(validation_succeeds:)
-    if validation_succeeds
-      allow(validate_whitelisted_webservice).to receive(:call)
-    else
-      allow(validate_whitelisted_webservice).to receive(:call)
-                            .and_raise("whitelisted-webservice-validation-error")
-    end
-  end
-
-  def mock_webservice_access_validator(validation_succeeds:)
-    if validation_succeeds
-      allow(validate_webservice_access).to receive(:call)
-    else
-      allow(validate_webservice_access).to receive(:call)
-                                                  .and_raise("webservice-access-validation-error")
-    end
+            .and_return(mock_validate_webservice_access)
+    allow(mock_validate_webservice_access).to receive(:call)
+                                           .and_return(true)
   end
 
   context "A whitelisted, accessible webservice" do
     subject do
       Authentication::Security::ValidateSecurity.new(
-        validate_whitelisted_webservice: mock_whitelisted_webservice_validator(validation_succeeds: true),
-        validate_webservice_access: mock_webservice_access_validator(validation_succeeds: true)
+        validate_whitelisted_webservice: mock_validate_whitelisted_webservice,
+        validate_webservice_access: mock_validate_webservice_access
       ).(
-        webservice: default_authenticator_mock,
+        webservice: authenticator_mock,
           account: test_account,
           user_id: test_user_id,
           enabled_authenticators: two_authenticator_env
@@ -125,17 +111,21 @@ RSpec.describe Authentication::Security::ValidateSecurity do
   context "A whitelisted, inaccessible webservice and authorized user" do
     subject do
       Authentication::Security::ValidateSecurity.new(
-        validate_whitelisted_webservice: mock_whitelisted_webservice_validator(validation_succeeds: true),
-        validate_webservice_access: mock_webservice_access_validator(validation_succeeds: false)
+        validate_whitelisted_webservice: mock_validate_whitelisted_webservice,
+        validate_webservice_access: mock_validate_webservice_access
       ).(
-        webservice: default_authenticator_mock,
+        webservice: authenticator_mock,
           account: test_account,
           user_id: test_user_id,
           enabled_authenticators: two_authenticator_env
       )
     end
 
-    it "raises a webservice-access validation error" do
+    it "raises the error that is raised by validate_webservice_access" do
+      allow(mock_validate_webservice_access)
+        .to receive(:call)
+              .and_raise("webservice-access-validation-error")
+      
       expect { subject }.to raise_error("webservice-access-validation-error")
     end
   end
@@ -143,17 +133,22 @@ RSpec.describe Authentication::Security::ValidateSecurity do
   context "An un-whitelisted, accessible webservice" do
     subject do
       Authentication::Security::ValidateSecurity.new(
-        validate_whitelisted_webservice: mock_whitelisted_webservice_validator(validation_succeeds: false),
-        validate_webservice_access: mock_webservice_access_validator(validation_succeeds: true)
+        validate_whitelisted_webservice: mock_validate_whitelisted_webservice,
+        validate_webservice_access: mock_validate_webservice_access
       ).(
-        webservice: default_authenticator_mock,
+        webservice: authenticator_mock,
           account: test_account,
           user_id: test_user_id,
           enabled_authenticators: two_authenticator_env
       )
     end
 
-    it "raises a whitelisted-webservice validation error" do
+    it "raises the error that is raised by validate_whitelisted_webservice" do
+
+      allow(mock_validate_whitelisted_webservice)
+        .to receive(:call)
+              .and_raise("whitelisted-webservice-validation-error")
+
       expect { subject }.to raise_error("whitelisted-webservice-validation-error")
     end
   end
