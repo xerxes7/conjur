@@ -15,10 +15,10 @@ module Audit
 
     def write_to_db
       Message.create facility: facility,
-                     severity: severity,
+                     severity: logger_severity,
                      hostname: "myhost",
                      appname: progname,
-                     procid: "myid",
+                     procid: Thread.current[:request_id] || Process.pid,
                      msgid: message_id,
                      sdata: structured_data.to_json,
                      message: message
