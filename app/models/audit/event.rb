@@ -19,8 +19,8 @@ module Audit
                      hostname: "myhost",
                      appname: progname,
                      procid: "myid",
-                     msgid: "myguid",
-                     #sdata: "structured_data",
+                     msgid: message_id,
+                     sdata: structured_data.to_json,
                      message: message
     end
 
