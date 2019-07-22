@@ -23,7 +23,7 @@ class SecretsController < RestController
     Audit::Event::Update.new(error_info.merge(
       resource: resource,
       user: @current_user
-    )).log_to Audit.logger
+    )).write_to_db
   end
   
   def show

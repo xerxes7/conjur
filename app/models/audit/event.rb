@@ -13,6 +13,17 @@ module Audit
       logger.log logger_severity, self, progname
     end
 
+    def write_to_db
+      Message.create facility: facility,
+                     severity: severity,
+                     hostname: "myhost",
+                     appname: progname,
+                     procid: "myid",
+                     msgid: "myguid",
+                     #sdata: "structured_data",
+                     message: message
+    end
+
     def to_s
       message
     end
