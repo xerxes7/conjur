@@ -47,6 +47,7 @@ module Loader
     include Handlers::RestrictedTo
     include Handlers::Password
     include Handlers::PublicKey
+    include Handlers::Provision
 
     attr_reader :policy_version, :create_records, :delete_records, :new_roles, :schemata
 
@@ -61,14 +62,16 @@ module Loader
       annotations: [ :resource_id, :name, :value ]
     }
 
-    def initialize policy_version
+    def initialize policy_version, context: {}
       @policy_version = policy_version
       @schemata = Schemata.new
+      @context = context
 
       # Transform each statement into a Loader type
       @create_records = policy_version.create_records.map do |policy_object|
         Loader::Types.wrap policy_object, self
       end
+
       @delete_records = policy_version.delete_records.map do |policy_object|
         Loader::Types.wrap policy_object, self
       end
@@ -109,6 +112,8 @@ module Loader
       store_public_keys
 
       store_restricted_to
+
+      provision_values
 
       emit_audit
     end
