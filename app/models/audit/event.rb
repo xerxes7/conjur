@@ -16,7 +16,7 @@ module Audit
     def write_to_db
       Message.create facility: facility,
                      severity: logger_severity,
-                     hostname: "myhost",
+                     hostname: `hostname`,
                      appname: progname,
                      procid: Thread.current[:request_id] || Process.pid,
                      msgid: message_id,
