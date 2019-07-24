@@ -78,7 +78,7 @@ class SecretsController < RestController
         version: version,
         user: current_user
       )
-    ).log_to Audit.logger
+    ).write_to_db
   end
 
   def error_info
