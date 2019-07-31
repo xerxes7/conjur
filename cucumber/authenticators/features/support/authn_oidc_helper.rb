@@ -39,6 +39,7 @@ module AuthnOidcHelper
     system("#{path_script} #{params}")
 
     @oidc_auth_code = `#{"cat /authn-oidc/phantomjs/scripts/authorization_code"}`
+    expect(@oidc_auth_code).not_to be_empty, "couldn't fetch authorization code"
   end
 
   def fetch_oidc_id_token
@@ -54,8 +55,8 @@ module AuthnOidcHelper
     set_id_token_user_property_variable
   end
 
-  def set_provider_uri_variable
-    set_oidc_variable("provider-uri", oidc_provider_uri)
+  def set_provider_uri_variable(value = oidc_provider_uri)
+    set_oidc_variable("provider-uri", value)
   end
 
   def set_id_token_user_property_variable

@@ -12,12 +12,12 @@ module Authentication
   Authenticate = CommandClass.new(
     dependencies: {
       enabled_authenticators: ENV['CONJUR_AUTHENTICATORS'],
-      token_factory: TokenFactory.new,
-      validate_security: ::Authentication::Security::ValidateSecurity.new,
-      validate_origin: ::Authentication::ValidateOrigin.new,
-      audit_event: ::Authentication::AuditEvent.new
+      token_factory:          TokenFactory.new,
+      validate_security:      ::Authentication::Security::ValidateSecurity.new,
+      validate_origin:        ::Authentication::ValidateOrigin.new,
+      audit_event:            ::Authentication::AuditEvent.new
     },
-    inputs: %i(authenticator_input authenticators)
+    inputs:       %i(authenticator_input authenticators)
   ) do
 
     def call
@@ -62,16 +62,24 @@ module Authentication
     end
 
     def audit_success
-      @audit_event.(input: @authenticator_input, success: true, message: nil)
+      @audit_event.(
+        authenticator_input: @authenticator_input,
+          success: true,
+          message: nil
+      )
     end
 
     def audit_failure(err)
-      @audit_event.(input: @authenticator_input, success: false, message: err.message)
+      @audit_event.(
+        authenticator_input: @authenticator_input,
+          success: false,
+          message: err.message
+      )
     end
 
     def new_token
       @token_factory.signed_token(
-        account: @authenticator_input.account,
+        account:  @authenticator_input.account,
         username: @authenticator_input.username
       )
     end

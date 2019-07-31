@@ -11,11 +11,11 @@ module Authentication
   Login = CommandClass.new(
     dependencies: {
       enabled_authenticators: ENV['CONJUR_AUTHENTICATORS'],
-      validate_security: ::Authentication::Security::ValidateSecurity.new,
-      audit_event: ::Authentication::AuditEvent.new,
-      role_cls: ::Role
+      validate_security:      ::Authentication::Security::ValidateSecurity.new,
+      audit_event:            ::Authentication::AuditEvent.new,
+      role_cls:               ::Role
     },
-    inputs: %i(authenticator_input authenticators)
+    inputs:       %i(authenticator_input authenticators)
   ) do
 
     def call
@@ -59,16 +59,24 @@ module Authentication
     end
 
     def audit_success
-      @audit_event.(input: @authenticator_input, success: true, message: nil)
+      @audit_event.(
+        authenticator_input: @authenticator_input,
+          success: true,
+          message: nil
+      )
     end
 
     def audit_failure(err)
-      @audit_event.(input: @authenticator_input, success: false, message: err.message)
+      @audit_event.(
+        authenticator_input: @authenticator_input,
+          success: false,
+          message: err.message
+      )
     end
 
     def new_login
       LoginResponse.new(
-        role_id: role.id,
+        role_id:            role.id,
         authentication_key: key
       )
     end

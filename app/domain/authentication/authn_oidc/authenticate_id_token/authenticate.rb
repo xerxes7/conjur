@@ -24,18 +24,16 @@ module Authentication
       ) do
 
         def call
-          begin
-            decode_and_verify_id_token
-            validate_conjur_username
-            add_username_to_input
-            validate_security
-            validate_origin
-            audit_success
-          rescue => e
-            audit_failure(e)
-            raise e
-          end
+          decode_and_verify_id_token
+          validate_conjur_username
+          add_username_to_input
+          validate_security
+          validate_origin
+          audit_success
           new_token
+        rescue => e
+          audit_failure(e)
+          raise e
         end
 
         private

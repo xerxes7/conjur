@@ -74,13 +74,13 @@ RSpec.describe 'Authentication::Oidc' do
             request: oidc_authenticate_id_token_request
           )
 
-          ::Authentication::AuthnOidc::AuthenticateIdToken::Authenticate.new(
+          ::Authentication::AuthnOidc::Authenticate.new(
             enabled_authenticators: oidc_authenticator_name,
             token_factory: token_factory,
             validate_security: mocked_security_validator,
             validate_origin: mocked_origin_validator,
             decode_and_verify_id_token: mocked_decode_and_verify_id_token
-          ).(
+          ).call(
             authenticator_input: input_
           )
         end
@@ -108,13 +108,13 @@ RSpec.describe 'Authentication::Oidc' do
             request: no_field_oidc_authenticate_id_token_request
           )
 
-          ::Authentication::AuthnOidc::AuthenticateIdToken::Authenticate.new(
+          ::Authentication::AuthnOidc::Authenticate.new(
             enabled_authenticators: oidc_authenticator_name,
             token_factory: token_factory,
             validate_security: mocked_security_validator,
             validate_origin: mocked_origin_validator,
             decode_and_verify_id_token: mocked_decode_and_verify_id_token
-          ).(
+          ).call(
             authenticator_input: input_
           )
         end
@@ -136,13 +136,13 @@ RSpec.describe 'Authentication::Oidc' do
             request: no_value_oidc_authenticate_id_token_request
           )
 
-          ::Authentication::AuthnOidc::AuthenticateIdToken::Authenticate.new(
+          ::Authentication::AuthnOidc::Authenticate.new(
             enabled_authenticators: oidc_authenticator_name,
             token_factory: token_factory,
             validate_security: mocked_security_validator,
             validate_origin: mocked_origin_validator,
             decode_and_verify_id_token: mocked_decode_and_verify_id_token
-          ).(
+          ).call(
             authenticator_input: input_
           )
         end
