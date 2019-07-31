@@ -17,15 +17,17 @@ module Authentication
       ) do
 
         def call
-          validate_and_decrypt_oidc_conjur_token
-          add_username_to_input
-          validate_security
-          validate_origin
-          audit_success
+          begin
+            validate_and_decrypt_oidc_conjur_token
+            add_username_to_input
+            validate_security
+            validate_origin
+            audit_success
+          rescue => e
+            audit_failure(e)
+            raise e
+          end
           new_token
-        rescue => e
-          audit_failure(e)
-          raise e
         end
 
         private

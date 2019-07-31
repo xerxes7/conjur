@@ -19,14 +19,16 @@ module Authentication
   ) do
 
     def call
-      validate_authenticator_exists
-      validate_security
-      validate_credentials
-      audit_success
+      begin
+        validate_authenticator_exists
+        validate_security
+        validate_credentials
+        audit_success
+      rescue => e
+        audit_failure(e)
+        raise e
+      end
       new_login
-    rescue => e
-      audit_failure(e)
-      raise e
     end
 
     private

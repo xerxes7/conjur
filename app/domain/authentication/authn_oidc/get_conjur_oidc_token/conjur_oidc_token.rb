@@ -19,19 +19,21 @@ module Authentication
       ) do
 
         def call
-          fetch_id_token_details
-          validate_credentials
-          add_username_to_input
-          validate_security
-          validate_origin
-          audit_success
+          begin
+            fetch_id_token_details
+            validate_credentials
+            add_username_to_input
+            validate_security
+            validate_origin
+            audit_success
+          rescue => e
+            audit_failure(e)
+            raise e
+          end
           new_conjur_oidc_token
-        rescue => e
-          audit_failure(e)
-          raise e
         end
 
-        private
+          private
 
         def fetch_id_token_details
           oidc_id_token_details

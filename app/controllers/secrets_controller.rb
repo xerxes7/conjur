@@ -18,12 +18,12 @@ class SecretsController < RestController
     Secret.create resource_id: resource.id, value: value
     resource.enforce_secrets_version_limit
 
-    head :created
-  ensure
     Audit::Event::Update.new(error_info.merge(
-      resource: resource,
-      user: @current_user
+        resource: resource,
+        user: @current_user
     )).log_to Audit.logger
+
+    head :created
   end
   
   def show
