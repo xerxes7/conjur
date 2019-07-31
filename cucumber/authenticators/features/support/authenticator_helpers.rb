@@ -33,14 +33,6 @@ module AuthenticatorHelpers
     nil
   end
 
-  def token_for_keys(keys, token_string)
-    return nil unless http_status == 200
-    token = JSON.parse(token_string)
-    keys.all? { |k| token.key? k }
-  rescue
-    nil
-  end
-
   def bad_request?
     http_status == 400
   end
