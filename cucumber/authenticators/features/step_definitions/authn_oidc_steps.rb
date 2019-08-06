@@ -14,12 +14,12 @@ Given(/^I successfully set provider-uri variable$/) do
   set_provider_uri_variable
 end
 
-Given(/^I successfully set id-token-user-property variable$/) do
-  set_id_token_user_property_variable
+Given(/^I successfully set provider-uri variable to value "([^"]*)"$/) do |provider_uri|
+  set_provider_uri_variable(provider_uri)
 end
 
-When(/^I successfully login via OIDC$/) do
-  login_with_oidc(service_id: 'keycloak', account: 'cucumber')
+Given(/^I successfully set id-token-user-property variable$/) do
+  set_id_token_user_property_variable
 end
 
 When(/^I authenticate via OIDC with id token$/) do

@@ -2,6 +2,7 @@
 
 class AuthenticateController < ApplicationController
   include BasicAuthenticator
+  include AuthorizeResource
 
   def index
     authenticators = {
@@ -16,6 +17,24 @@ class AuthenticateController < ApplicationController
     }
 
     render json: authenticators
+  end
+
+  def status
+    Authentication::ValidateStatus.new.(
+      authenticator_status_input: status_input
+    )
+    render json: { status: "ok" }
+  rescue => e
+    render status_failure_response(e)
+  end
+
+  def status_input
+    Authentication::AuthenticatorStatusInput.new(
+      authenticator_name: params[:authenticator],
+      service_id: params[:service_id],
+      account: params[:account],
+      username: ::Role.username_from_roleid(current_user.role_id)
+    )
   end
 
   def login
@@ -46,40 +65,8 @@ class AuthenticateController < ApplicationController
     )
   end
 
-  # - Prepare ID Token request
-  # - Get ID Token with code from OpenID Provider
-  # - Validate ID Token
-  # - Link user details to Conjur User
-  # - Check user has permissions
-  # - Encrypt ID Token
-  #
-  # Returns IDToken encrypted, Expiration Duration and Username
-  def login_oidc
-    oidc_encrypted_token = Authentication::AuthnOidc::GetConjurOidcToken::ConjurOidcToken.new.(
-      authenticator_input: oidc_authenticator_input
-    )
-    render json: oidc_encrypted_token
-  rescue => e
-    handle_authentication_error(e)
-  end
-
-  # - Decrypt ID token
-  # - Validate ID Token
-  # - Check user permission
-  # - Introspect ID Token
-  #
-  # Returns Conjur access token
-  def authenticate_oidc_conjur_token
-    authentication_token = Authentication::AuthnOidc::AuthenticateOidcConjurToken::Authenticate.new.(
-      authenticator_input: oidc_authenticator_input
-    )
-    render json: authentication_token
-  rescue => e
-    handle_authentication_error(e)
-  end
-
   def authenticate_oidc
-    authentication_token = Authentication::AuthnOidc::AuthenticateIdToken::Authenticate.new.(
+    authentication_token = Authentication::AuthnOidc::Authenticate.new.(
       authenticator_input: oidc_authenticator_input
     )
     render json: authentication_token
@@ -153,6 +140,27 @@ class AuthenticateController < ApplicationController
     else
       raise Unauthorized
     end
+  end
+
+  def status_failure_response(error)
+    payload = {
+      status: "error",
+      error: error.inspect
+    }
+
+    status_code = case error
+                  when Errors::Authentication::Security::UserNotAuthorizedInConjur
+                    :forbidden
+                  when Errors::Authentication::StatusNotImplemented
+                    :not_implemented
+
+                  when Errors::Authentication::AuthenticatorNotFound
+                    :not_found
+                  else
+                    :internal_server_error
+                  end
+
+    { :json => payload, :status => status_code }
   end
 
   def installed_authenticators
