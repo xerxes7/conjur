@@ -7,36 +7,27 @@ class SecretsController < RestController
   include AuthorizeResource
   
   before_filter :current_user
-  
-  def create
-    begin
-      # Action code
-      authorize :update
-      value = request.raw_post
-      raise ArgumentError, "action_1" if value.eql?("action_1")
-      raise ArgumentError, "'value' may not be empty" if value.blank?
 
-      Secret.create resource_id: resource.id, value: value
-      raise ArgumentError, "action_2" if value.eql?("action_2")
-      resource.enforce_secrets_version_limit
-      raise ArgumentError, "action_3" if value.eql?("action_3")
-      # Audit success code
-      props = {}
-      db = Sequel.connect 'postgres://:5433/audit'
-      raise ArgumentError, "s_audit_1" if value.eql?("s_audit_1")
-      db.transaction do
-        raise ArgumentError, "s_audit_2" if value.eql?("s_audit_2")
-        ConjurAudit::Message.set_dataset db[:messages]
-        raise ArgumentError, "s_audit_3" if value.eql?("s_audit_3")
-        sdata = props[:sdata]
-        ConjurAudit::Message.create({facility: 4, severity: 5, timestamp: Time.now, message: value, sdata: sdata && Sequel.pg_jsonb(sdata)}.merge(props.except(:sdata)))
-        raise ArgumentError, "s_audit_4" if value.eql?("s_audit_4")
-      end
-      raise ArgumentError, "action_4" if value.eql?("action_4")
-      head :created
-      raise ArgumentError, "action_5" if value.eql?("action_5")
-    end
-    raise ArgumentError, "function_end" if value.eql?("function_end")
+  def create
+    authorize :update
+
+    value = request.raw_post
+
+    raise ArgumentError, "'value' may not be empty" if value.blank?
+
+    Secret.create resource_id: resource.id, value: value
+    resource.enforce_secrets_version_limit
+
+    head :created
+  ensure
+    props = {}
+    sdata = props[:sdata]
+    ConjurAudit::Message.create({facility: 4, severity: 5, timestamp: Time.now, message: value, sdata: sdata && Sequel.pg_jsonb(sdata)}.merge(props.except(:sdata)))
+
+    Audit::Event::Update.new(error_info.merge(
+      resource: resource,
+      user: @current_user
+    )).log_to Audit.logger
   end
 
   def show
@@ -84,6 +75,9 @@ class SecretsController < RestController
   def audit_fetch resource, version: nil
     # don't audit the fetch if the resource doesn't exist
     return unless resource
+    props = {}
+    sdata = props[:sdata]
+    ConjurAudit::Message.create({facility: 4, severity: 5, timestamp: Time.now, message: "dvir", sdata: sdata && Sequel.pg_jsonb(sdata)}.merge(props.except(:sdata)))
 
     Audit::Event::Fetch.new(
       error_info.merge(
