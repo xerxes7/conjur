@@ -19,7 +19,7 @@ def create_audit_table
     db = Sequel::Model.db = Sequel.connect(ENV['DATABASE_URL'])
     Sequel::Migrator.run(db, '/src/conjur-server/engines/conjur_audit/db/migrate', allow_missing_migration_files: true)
   rescue
-    exec "rake db:migrate"
+    raise "Failed to create Audit tables. Aborting!"
   end
 end
 
@@ -31,7 +31,7 @@ def create_conjur_tables
     db = Sequel::Model.db = Sequel.connect(ENV['DATABASE_URL'])
     Sequel::Migrator.run(db, '/src/conjur-server/db/migrate', allow_missing_migration_files: true)
   rescue
-    raise "Failed to create conjur tables. Aborting!"
+    exec "rake db:migrate"
   end
 end
 
