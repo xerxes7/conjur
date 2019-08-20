@@ -20,9 +20,6 @@ class SecretsController < RestController
 
     head :created
   ensure
-    props = {}
-    sdata = props[:sdata]
-    ConjurAudit::Message.create({facility: 4, severity: 5, timestamp: Time.now, message: value, sdata: sdata && Sequel.pg_jsonb(sdata)}.merge(props.except(:sdata)))
 
     Audit::Event::Update.new(error_info.merge(
       resource: resource,
@@ -75,9 +72,6 @@ class SecretsController < RestController
   def audit_fetch resource, version: nil
     # don't audit the fetch if the resource doesn't exist
     return unless resource
-    props = {}
-    sdata = props[:sdata]
-    ConjurAudit::Message.create({facility: 4, severity: 5, timestamp: Time.now, message: "dvir", sdata: sdata && Sequel.pg_jsonb(sdata)}.merge(props.except(:sdata)))
 
     Audit::Event::Fetch.new(
       error_info.merge(
