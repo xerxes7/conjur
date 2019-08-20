@@ -11,6 +11,18 @@ version File.read(File.expand_path("../VERSION", File.dirname(__FILE__)))
 arguments :strict
 subcommand_option_handling :normal
 
+# Create audit table.
+def create_audit_table
+  require 'sequel'
+  Sequel.extension :migration
+  begin
+    db = Sequel::Model.db = Sequel.connect(ENV['DATABASE_URL'])
+    Sequel::Migrator.run(db, '/src/conjur-server/engines/conjur_audit/db/migrate', allow_missing_migration_files: true)
+  rescue
+    raise "Failed to create Audit tables. Aborting!"
+  end
+end
+
 # Attempt to connect to the database.
 def connect
   require 'sequel'
@@ -211,6 +223,13 @@ command :db do |cgrp|
       connect
 
       exec "rake db:migrate"
+    end
+  end
+  cgrp.desc "Create and/or upgrade the audit table"
+  cgrp.command :audit do |c|
+    c.action do |global_options,options,args|
+      connect
+      create_audit_table
     end
   end
 end
