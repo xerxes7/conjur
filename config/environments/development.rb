@@ -21,6 +21,9 @@ Rails.application.configure do
   config.consider_all_requests_local       = true
   config.action_controller.perform_caching = false
 
+  # Configure audit database
+  config.audit_database = ENV['DATABASE_URL']
+
   # Use the lowest log level to ensure availability of diagnostic information
   # when problems arise.
   config.log_level = ENV['CONJUR_LOG_LEVEL'] || :debug

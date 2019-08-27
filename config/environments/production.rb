@@ -32,6 +32,9 @@ Rails.application.configure do
   config.log_level = ENV['CONJUR_LOG_LEVEL'] || :info
   config.log_formatter = ConjurFormatter.new
 
+  # Configure audit database
+  config.audit_database = ENV['DATABASE_URL']
+
   # Specifies the header that your server uses for sending files.
   # config.action_dispatch.x_sendfile_header = 'X-Sendfile' # for Apache
   # config.action_dispatch.x_sendfile_header = 'X-Accel-Redirect' # for NGINX
