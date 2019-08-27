@@ -3,10 +3,9 @@
 module ConjurAudit
   class Engine < ::Rails::Engine
     isolate_namespace ConjurAudit
-    config.audit_database = ENV['AUDIT_DATABASE_URL']
 
     initializer :connect_audit_database do
-      if (db = config.audit_database)
+      if defined?(config.audit_database)
         db = Sequel.connect db
         db.extension :pg_json
         Message.db.extension :pg_json
