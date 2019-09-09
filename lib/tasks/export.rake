@@ -56,7 +56,9 @@ module ExportTask
       # Export Conjur database
       FileUtils.mkpath out_dir.join('backup')
       dbdump = out_dir.join('backup/conjur.db')
-      call(%(pg_dump -Fc -f \"#{dbdump}\" #{ENV['DATABASE_URL']})) ||
+      # Exclude messages table, in appliance audit service is deployed on different pg service
+      excluded_tables = "messages"
+      call(%(pg_dump --exclude-table="#{excluded_tables}" -Fc -f \"#{dbdump}\" #{ENV['DATABASE_URL']})) ||
         raise('unable to get database backup')
       dbdump
     end
