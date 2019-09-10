@@ -1,7 +1,7 @@
 GIT
   remote: https://github.com/cyberark/conjur-api-ruby.git
-  revision: 8f5e398aec728c1d89a0e599cc0567426887df95
-  branch: master
+  revision: ab063015e58b550db525872369c921ff5c88dbf9
+  branch: policy-factory
   specs:
     conjur-api (5.3.2)
       activesupport
