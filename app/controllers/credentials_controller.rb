@@ -21,13 +21,13 @@ class CredentialsController < ApplicationController
   
   # Users can update their own record, and +update+ privilege on the authn service enables a superuser
   # to update any user's record.
-  before_filter :authorize_self_or_update, only: [ :rotate_api_key ]
+  before_filter :authorize_self_or_update, only: [ :rotate_api_key, :set_api_key ]
     
   # Users are always permitted to perform some operations on their own record.
-  before_filter :authorize_self, except: [ :rotate_api_key ]
+  before_filter :authorize_self, except: [ :rotate_api_key, :set_api_key ]
 
   # Ensure the credentials exist if they will be accessed or modified.
-  before_filter :ensure_credentials, only: [ :update_password, :rotate_api_key, :login ]
+  before_filter :ensure_credentials, only: [ :update_password, :rotate_api_key, :login, :set_api_key ]
     
   # Update the authenticated user's password. The implication of this is that if you can login as a user, you can change
   # that user's password.
@@ -48,6 +48,16 @@ class CredentialsController < ApplicationController
     @role.credentials.rotate_api_key
     @role.credentials.save
     render text: @role.credentials.api_key
+  end
+
+  # Set a user API key.
+  #
+  # The new API key is in the request body.
+  def set_api_key
+    api_key = request.body.read
+    @role.credentials.api_key = api_key
+    @role.credentials.save
+    head 204
   end
   
   protected
