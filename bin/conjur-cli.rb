@@ -61,13 +61,13 @@ command :server do |c|
 
     connect
     #system "rake conjur_audit:install:migrations"
-    # BASEDIR=/opt/conjur/possum
-    # ENGINEDIR=$BASEDIR/engines/conjur_audit
-    # MIGRATIONDIR=$ENGINEDIR/db/migrate
-
     #system "bundle exec sequel postgres://postgres@pg/postgres?currentSchema=audit -E -m ./engines/conjur_audit/db/migrate/"
-    # create schema audit;
     #system "bundle exec sequel postgres://postgres@pg/postgres?search_path=audit -E -m ./engines/conjur_audit/db/migrate/"
+    # create schema audit;
+    Sequel::Model.db.create_schema('audit', :if_not_exists=>true)
+    engine_migrate = File.expand_path('../engines/conjur_audit/db/migrate', __dir__)
+    audit_database_url = 'postgres://postgres@pg/postgres?search_path=audit'
+    system "bundle exec sequel #{audit_database_url} -E -m #{engine_migrate}"
     system "rake db:migrate" or exit $?.exitstatus
     if account
       system "rake account:create[#{account}]" or exit $?.exitstatus
