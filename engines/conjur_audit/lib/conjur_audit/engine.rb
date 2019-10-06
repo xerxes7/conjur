@@ -5,8 +5,8 @@ module ConjurAudit
     isolate_namespace ConjurAudit
 
     initializer :connect_audit_database do
-      if config.try(:audit_database)
-        db = Sequel.connect config.audit_database
+      if (db = config.audit_database)
+        db = Sequel.connect db
         db.extension :pg_json
         Message.db.extension :pg_json
         Message.set_dataset db[:messages]
