@@ -18,11 +18,10 @@ $LOAD_PATH << '../app/domain'
 RSpec.configure do |config|
   config.before(:suite) do
     DatabaseCleaner.strategy = :transaction
-    db = Sequel.connect(ENV.fetch('DATABASE_URL'))
-    DatabaseCleaner[:sequel].db = db
   end
 
   config.around(:each) do |example|
+    DatabaseCleaner[:sequel].db = Sequel::Model.db
     DatabaseCleaner.cleaning do
       example.run
     end

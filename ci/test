@@ -334,4 +334,5 @@ _wait_for_pg_and_create_audit_schema() {
   until docker-compose exec -T $svc psql -U postgres -c "CREATE SCHEMA IF NOT EXISTS audit" -d postgres; do sleep 1; done
 }
 
+
 _main "$(dirname $0)" "$@"
