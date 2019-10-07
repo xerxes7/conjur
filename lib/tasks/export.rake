@@ -57,7 +57,7 @@ module ExportTask
       FileUtils.mkpath out_dir.join('backup')
       dbdump = out_dir.join('backup/conjur.db')
       conjur_schema = "public"
-      call(%(pg_dump --schema=="#{conjur_schema}" -Fc -f \"#{dbdump}\" #{ENV['DATABASE_URL']})) ||
+      call(%(pg_dump --schema="#{conjur_schema}" -Fc -f \"#{dbdump}\" #{ENV['DATABASE_URL']})) ||
         raise('unable to get database backup')
       dbdump
     end
