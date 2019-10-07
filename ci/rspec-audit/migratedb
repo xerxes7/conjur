@@ -1,5 +1,5 @@
 #!/bin/bash -e
 # Run DB migration for audit database
 BUNDLE_GEMFILE=./Gemfile \
-  bundle exec sequel $DATABASE_URL \
+  bundle exec sequel postgres://postgres@pg/postgres?search_path=audit \
   -E -m ./engines/conjur_audit/db/migrate/
