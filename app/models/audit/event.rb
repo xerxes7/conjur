@@ -10,7 +10,9 @@ module Audit
     progname 'conjur'
 
     def log_to logger
-      log_to_db
+      if config.try(:audit_database)
+        log_to_db
+      end
       logger.log logger_severity, self, progname
     end
 
