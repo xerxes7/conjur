@@ -12,18 +12,20 @@ gem 'command_class'
 gem 'base58'
 gem 'iso8601'
 gem 'nokogiri', '>= 1.8.2'
-gem 'puma', ' ~> 3.10'
-gem 'rack', '~> 1.6.11'
-gem 'rails', '= 4.2.11'
+gem 'puma' #, ' ~> 3.10'
+gem 'rack'# , '~> 1.6.11'
+# gem 'rails', '= 4.2.11'
+gem 'rails', '5.0.0'
+
 gem 'rails-api'
-gem 'rake'
-gem 'sprockets', '~> 3.7.0', '>= 3.7.2'
+# gem 'rake'
+# gem 'sprockets', '~> 3.7.0', '>= 3.7.2'
 
 gem 'pg'
 gem 'sequel-postgres-schemata', require: false
 gem 'sequel-rails'
 
-gem 'activesupport'
+# gem 'activesupport'
 gem 'base32-crockford'
 gem 'bcrypt-ruby', '~> 3.0.0'
 gem 'gli', require: false
@@ -44,7 +46,7 @@ gem 'ruby_dep', '= 1.3.1'
 gem 'conjur-api', github: 'cyberark/conjur-api-ruby', branch: 'master'
 gem 'conjur-policy-parser', '>= 3.0.3',
   github: 'conjurinc/conjur-policy-parser', branch: 'possum'
-gem 'conjur-rack', '~> 3.1'
+gem 'conjur-rack'#, '~> 3.1'
 gem 'conjur-rack-heartbeat'
 gem 'rack-rewrite'
 
