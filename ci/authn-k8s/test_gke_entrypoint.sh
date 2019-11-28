@@ -16,6 +16,7 @@ ENDOFLINE
 function finish {
   echo 'Finishing'
   echo '-----'
+  echo 'Not really...'
 
   {
     if [[ "$pod_name" != "" ]]; then
@@ -32,14 +33,14 @@ function finish {
     touch output/gke-authn-k8s-logs.txt  # so Jenkins artifact collection doesn't fail
   }
 
-  echo 'Removing namespace $CONJUR_AUTHN_K8S_TEST_NAMESPACE'
-  echo '-----'
-  kubectl --ignore-not-found=true delete namespace $CONJUR_AUTHN_K8S_TEST_NAMESPACE
-
-  delete_image $CONJUR_TEST_AUTHN_K8S_TAG
-  delete_image $CONJUR_AUTHN_K8S_TAG
-  delete_image $INVENTORY_TAG
-  delete_image $NGINX_TAG
+#  echo 'Removing namespace $CONJUR_AUTHN_K8S_TEST_NAMESPACE'
+#  echo '-----'
+#  kubectl --ignore-not-found=true delete namespace $CONJUR_AUTHN_K8S_TEST_NAMESPACE
+#
+#  delete_image $CONJUR_TEST_AUTHN_K8S_TAG
+#  delete_image $CONJUR_AUTHN_K8S_TAG
+#  delete_image $INVENTORY_TAG
+#  delete_image $NGINX_TAG
 }
 trap finish EXIT
 
@@ -56,9 +57,9 @@ function main() {
   pushDockerImages
 
   launchConjurMaster
-  
+
   copyNginxSSLCert
-  
+
   copyConjurPolicies
   loadConjurPolicies
   
