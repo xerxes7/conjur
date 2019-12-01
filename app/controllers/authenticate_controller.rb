@@ -46,7 +46,7 @@ class AuthenticateController < ApplicationController
   def authenticate
     authn_token = Authentication::Authenticate.new.(
       authenticator_input: authenticator_input,
-        authenticators: installed_authenticators
+      authenticators: installed_authenticators
     )
     render json: authn_token
   rescue => e
@@ -90,8 +90,11 @@ class AuthenticateController < ApplicationController
     # TODO: add this to initializer
     Authentication::AuthnK8s::InjectClientCert.new.(
       conjur_account: ENV['CONJUR_ACCOUNT'],
-        service_id: params[:service_id],
-        csr: request.body.read
+      service_id: params[:service_id],
+      csr: request.body.read,
+      # The host-id is split in the client where the suffix is in the CSR
+      # and the prefix is in the header. This is done to maintain backwards-compatibility
+      host_id_prefix: request.headers["Host-Id-Prefix"]
     )
     head :ok
   rescue => e
