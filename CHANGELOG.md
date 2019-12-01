@@ -6,6 +6,11 @@ and this project adheres to [Semantic Versioning](http://semver.org/spec/v2.0.0.
 
 ## [Unreleased]
 
+### Changed
+- The k8s host id does not use the "{@account}:host:conjur/authn-k8s/#{@service_name}/apps"
+  prefix and takes the full host-id from the CSR. We also handle backwards-compatibility and use
+  the prefix in case of an older client.
+
 ## [1.4.3] - 2019-11-26
 
 ### Added
