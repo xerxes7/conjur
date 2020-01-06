@@ -28,6 +28,7 @@ function finish {
 
       echo "Logs from Conjur Pod $pod_name:"
       kubectl logs $pod_name > output/gke-authn-k8s-logs.txt
+      cat output/gke-authn-k8s-logs.txt
 
       echo "Killing conjur so that coverage report is written"
       # The container is kept alive using an infinite sleep in the at_exit hook

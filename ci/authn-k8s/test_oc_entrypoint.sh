@@ -26,6 +26,7 @@ function finish {
 
       echo "Logs from Conjur Pod $pod_name:"
       oc logs $pod_name > "output/$PLATFORM-authn-k8s-logs.txt"
+      cat output/$PLATFORM-authn-k8s-logs.txt
     fi
   } || {
     echo "Logs could not be extracted from $pod_name"
