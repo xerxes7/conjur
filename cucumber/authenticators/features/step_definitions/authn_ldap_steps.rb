@@ -3,10 +3,10 @@
 # Uses cucumber's multiline string feature: https://bit.ly/2vpzqJx
 #
 
-When(/I login via( secure)? LDAP as (?:\S)+ Conjur user "(\S+)"/) do |secure, username|
+When(/I login via( secure)? LDAP as (?:\S)+ Conjur user "(\S+)" using password "(\S+)"/) do |secure, username, password|
   service_id = secure ? 'secure' : 'test'
-  login_with_ldap(service_id: service_id, account: 'cucumber', 
-                  username: username, password: username)
+  login_with_ldap(service_id: service_id, account: 'cucumber',
+                  username: username, password: password)
 end
 
 # First non-captured group allows for adjectives to clarify the
@@ -15,7 +15,7 @@ end
 When(/I authenticate via( secure)? LDAP as (?:\S)+ Conjur user "(\S+)"( using key)?/) do |secure, username, using_key|
   password = using_key ? ldap_auth_key : username
   service_id = secure ? 'secure' : 'test'
-  authenticate_with_ldap(service_id: service_id, account: 'cucumber', 
+  authenticate_with_ldap(service_id: service_id, account: 'cucumber',
                          username: username, api_key: password)
 end
 

@@ -60,12 +60,12 @@ Feature: Users can login with LDAP credentials from an authorized LDAP server
     And I store the LDAP CA certificate in "conjur/authn-ldap/secure/tls-ca-cert"
 
   Scenario: An LDAP user authorized in Conjur can login with a good password
-    When I login via LDAP as authorized Conjur user "alice"
+    When I login via LDAP as authorized Conjur user "alice" using password "ALice1234#####"
     And I authenticate via LDAP as authorized Conjur user "alice" using key
     Then user "alice" is authorized
 
   Scenario: An LDAP user authorized in Conjur can login with a good password using TLS
-    When I login via secure LDAP as authorized Conjur user "alice"
+    When I login via secure LDAP as authorized Conjur user "alice" using password "ALice1234#####"
     And I authenticate via secure LDAP as authorized Conjur user "alice" using key
     Then user "alice" is authorized
 
@@ -78,11 +78,11 @@ Feature: Users can login with LDAP credentials from an authorized LDAP server
     Then it is unauthorized
 
   Scenario: 'admin' cannot use LDAP authentication
-    When I login via LDAP as authorized Conjur user "admin"
+    When I login via LDAP as authorized Conjur user "admin" using password "SEcret12!!!!"
     Then it is unauthorized
 
   Scenario: An valid LDAP user who's not in Conjur can't login
-    When I login via LDAP as non-existent Conjur user "bob"
+    When I login via LDAP as non-existent Conjur user "bob" using password "BOb1234#####"
     Then it is forbidden
 
   Scenario: An empty password may never be used to authenticate
@@ -107,5 +107,5 @@ Feature: Users can login with LDAP credentials from an authorized LDAP server
         privilege: [ read, authenticate ]
         resource: !webservice
     """
-    When I login via LDAP as authorized Conjur user "alice"
+    When I login via LDAP as authorized Conjur user "alice" using password "ALice1234#####"
     Then it is forbidden

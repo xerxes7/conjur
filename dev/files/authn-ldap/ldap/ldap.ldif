@@ -9,7 +9,7 @@ objectClass: uidObject
 objectClass: organizationalPerson
 objectClass: inetOrgPerson
 objectClass: top
-userPassword: alice
+userPassword: ALice1234#####
 
 dn: uid=charles,dc=conjur,dc=net
 cn: Charles
@@ -22,4 +22,4 @@ objectClass: uidObject
 objectClass: organizationalPerson
 objectClass: inetOrgPerson
 objectClass: top
-userPassword: charles
+userPassword: CHarles1234#####

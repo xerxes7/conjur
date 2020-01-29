@@ -37,7 +37,7 @@ Feature: Users can authneticate with OIDC authenticator
     Given I have a "variable" resource called "test-variable"
     And I permit user "alice" to "execute" it
     And I add the secret value "test-secret" to the resource "cucumber:variable:test-variable"
-    And I fetch an ID Token for username "alice" and password "alice"
+    And I fetch an ID Token for username "alice" and password "ALice1234#####"
     When I authenticate via OIDC with id token
     Then user "alice" is authorized
     And I successfully GET "/secrets/cucumber/variable/test-variable" with authorized user
@@ -52,7 +52,7 @@ Feature: Users can authneticate with OIDC authenticator
       member: !user alice@conjur.net
     """
     When I add the secret value "email" to the resource "cucumber:variable:conjur/authn-oidc/keycloak/id-token-user-property"
-    And I fetch an ID Token for username "alice" and password "alice"
+    And I fetch an ID Token for username "alice" and password "ALice1234#####"
     And I authenticate via OIDC with id token
     Then user "alice@conjur.net" is authorized
 
@@ -71,12 +71,12 @@ Feature: Users can authneticate with OIDC authenticator
       role: !group conjur/authn-oidc/keycloak/users
       member: !group more-users
     """
-    And I fetch an ID Token for username "bob" and password "bob"
+    And I fetch an ID Token for username "bob" and password "BOb1234#####"
     When I authenticate via OIDC with id token
     Then user "bob" is authorized
 
   Scenario: Non-existing username in ID token is denied
-    Given I fetch an ID Token for username "not_in_conjur" and password "not_in_conjur"
+    Given I fetch an ID Token for username "not_in_conjur" and password "NOtinconjur1234#####"
     And I save my place in the log file
     When I authenticate via OIDC with id token
     Then it is unauthorized
@@ -90,7 +90,7 @@ Feature: Users can authneticate with OIDC authenticator
     """
     - !user bob
     """
-    And I fetch an ID Token for username "bob" and password "bob"
+    And I fetch an ID Token for username "bob" and password "BOb1234#####"
     And I save my place in the log file
     When I authenticate via OIDC with id token
     Then it is forbidden
@@ -101,7 +101,7 @@ Feature: Users can authneticate with OIDC authenticator
 
   Scenario: ID token without value of variable id-token-user-property is denied
     When I add the secret value "non_existing_field" to the resource "cucumber:variable:conjur/authn-oidc/keycloak/id-token-user-property"
-    And I fetch an ID Token for username "alice" and password "alice"
+    And I fetch an ID Token for username "alice" and password "ALice1234#####"
     And I save my place in the log file
     When I authenticate via OIDC with id token
     Then it is unauthorized
@@ -138,7 +138,7 @@ Feature: Users can authneticate with OIDC authenticator
     """
 
   Scenario: admin user is denied
-    And I fetch an ID Token for username "admin" and password "admin"
+    And I fetch an ID Token for username "admin" and password "SEcret12!!!!"
     And I save my place in the log file
     When I authenticate via OIDC with id token
     Then it is unauthorized
@@ -148,7 +148,7 @@ Feature: Users can authneticate with OIDC authenticator
     """
 
   Scenario: provider-uri dynamic change
-    And I fetch an ID Token for username "alice" and password "alice"
+    And I fetch an ID Token for username "alice" and password "ALice1234#####"
     And I authenticate via OIDC with id token
     And user "alice" is authorized
     # Update provider uri to a different hostname and verify `provider-uri` has changed
@@ -157,12 +157,12 @@ Feature: Users can authneticate with OIDC authenticator
     Then it is bad gateway
     # Check recovery to a valid provider uri
     When I successfully set OIDC variables
-    And I fetch an ID Token for username "alice" and password "alice"
+    And I fetch an ID Token for username "alice" and password "ALice1234#####"
     And I authenticate via OIDC with id token
     Then user "alice" is authorized
 
   Scenario: Bad Gateway is raised in case of an invalid OIDC Provider hostname
-    Given I fetch an ID Token for username "alice" and password "alice"
+    Given I fetch an ID Token for username "alice" and password "ALice1234#####"
     And I authenticate via OIDC with id token
     And user "alice" is authorized
     # Update provider uri to reachable but invalid hostname
@@ -171,6 +171,6 @@ Feature: Users can authneticate with OIDC authenticator
     Then it is bad gateway
 
   Scenario: Performance test
-    And I fetch an ID Token for username "alice" and password "alice"
+    And I fetch an ID Token for username "alice" and password "ALice1234#####"
     When I authenticate 1000 times in 10 threads via OIDC with id token
     Then The "avg" response time should be less than "0.75" seconds

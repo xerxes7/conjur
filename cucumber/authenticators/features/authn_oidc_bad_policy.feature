@@ -28,7 +28,7 @@ Feature: Users can authenticate with OIDC authenticator
     """
     And I am the super-user
     And I successfully set provider-uri variable
-    And I fetch an ID Token for username "alice" and password "alice"
+    And I fetch an ID Token for username "alice" and password "ALice1234#####"
     And I save my place in the log file
     When I authenticate via OIDC with id token
     Then it is unauthorized
@@ -65,7 +65,7 @@ Feature: Users can authenticate with OIDC authenticator
     """
     And I am the super-user
     And I successfully set id-token-user-property variable
-    And I fetch an ID Token for username "alice" and password "alice"
+    And I fetch an ID Token for username "alice" and password "ALice1234#####"
     And I save my place in the log file
     When I authenticate via OIDC with id token
     Then it is unauthorized
@@ -97,7 +97,7 @@ Feature: Users can authenticate with OIDC authenticator
     """
     And I am the super-user
     And I successfully set OIDC variables
-    And I fetch an ID Token for username "alice" and password "alice"
+    And I fetch an ID Token for username "alice" and password "ALice1234#####"
     And I save my place in the log file
     When I authenticate via OIDC with id token
     Then it is unauthorized
@@ -137,7 +137,7 @@ Feature: Users can authenticate with OIDC authenticator
     """
     And I am the super-user
     And I successfully set OIDC variables
-    And I fetch an ID Token for username "alice" and password "alice"
+    And I fetch an ID Token for username "alice" and password "ALice1234#####"
     And I save my place in the log file
     When I authenticate via OIDC with id token
     Then it is forbidden

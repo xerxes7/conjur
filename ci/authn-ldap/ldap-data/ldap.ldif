@@ -5,4 +5,4 @@ uid: alice
 objectClass: person
 objectClass: uidObject
 objectClass: top
-userPassword: alice
+userPassword: ALice1234#####

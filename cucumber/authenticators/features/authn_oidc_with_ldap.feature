@@ -58,7 +58,7 @@ Feature: Users can authenticate with OIDC & LDAP authenticators
     And I permit user "alice" to "execute" it
     And I add the secret value "test-secret" to the resource "cucumber:variable:test-variable"
     # Authenticate with authn-oidc
-    And I fetch an ID Token for username "alice" and password "alice"
+    And I fetch an ID Token for username "alice" and password "ALice1234####"
     When I authenticate via OIDC with id token
     Then user "alice" is authorized
     And I successfully GET "/secrets/cucumber/variable/test-variable" with authorized user
