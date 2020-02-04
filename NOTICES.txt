@@ -15,6 +15,7 @@ SECTION 1: Apache License 2.0
 SECTION 2: BSD 2-clause "Simplified" License
 
 >>> https://rubygems.org/gems/pg/versions/0.20.0
+>>> https://rubygems.org/gems/base32-crockford/versions/0.1.0
 
 SECTION 3: BSD 3-clause "New" or "Revised" License
 
@@ -58,11 +59,6 @@ SECTION 4: MIT License
 >>> https://rubygems.org/gems/rack-rewrite/versions/1.5.1
 >>> https://rubygems.org/gems/coffee-rails
 >>> https://rubygems.org/gems/bcrypt-ruby/versions/3.0.1
-
-SECTION 5: Gems with no/unknown License
-
->>> https://rubygems.org/gems/base32-crockford/versions/0.1.0
->>> https://rubygems.org/gems/random_password_generator/versions/1.0.0
 
 
 APPENDIX: Standard License Files and Templates
@@ -194,6 +190,31 @@ You can redistribute it and/or modify it under either the terms of the
      WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
      PURPOSE.
 
+
+>>> https://rubygems.org/gems/base32-crockford/versions/0.1.0
+
+   (c) 2008, Levin Alexander <http://levinalex.net>
+
+   Redistribution and use in source and binary forms, with or without
+   modification, are permitted provided that the following conditions are met:
+
+   1. Redistributions of source code must retain the above copyright notice, this
+      list of conditions and the following disclaimer.
+
+   2. Redistributions in binary form must reproduce the above copyright notice,
+      this list of conditions and the following disclaimer in the documentation
+      and/or other materials provided with the distribution.
+
+   THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+   AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+   IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+   DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
+   FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+   DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
+   SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
+   CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
+   OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+   OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 --------------- SECTION 3: BSD 3-clause "New" or "Revised" License ----------
 
