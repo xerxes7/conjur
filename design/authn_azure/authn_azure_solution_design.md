@@ -418,8 +418,8 @@ Azure authenticator performance should conform with our other authenticators wit
 
 | **Given**                                   | **When**                                                 | **Then**                                                                                           | **Tested**             |
 |---------------------------------------------|----------------------------------------------------------|----------------------------------------------------------------------------------------------------|-------------------------|
-| A host identity exists for Azure VM         | VM sends authentication request with a valid Azure token | An access token is returned                                                                        | <ul><li> [ ] </li></ul> |
-| A host identity does not exist for Azure VM | VM sends authentication request with a valid Azure token | <ul><li>Return 401 Unauthorized</li><li>Error message RoleNotFound is written to the log</li></ul> | <ul><li> [ ] </li></ul> |
+| A user identity exists for Azure VM         | VM sends authentication request with a valid Azure token | An access token is returned                                                                        | <ul><li> [ ] </li></ul> |
+| A user identity does not exist for Azure VM | VM sends authentication request with a valid Azure token | <ul><li>Return 401 Unauthorized</li><li>Error message RoleNotFound is written to the log</li></ul> | <ul><li> [ ] </li></ul> |
 
 
 |      | Given                                                                                                                | When                                                                                                        | Then                                                                                                                       | Manual / UT / Integration | Tested                      |Core Test|
