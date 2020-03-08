@@ -12,6 +12,7 @@ RUN apt-get update -y && \
     apt-get install -y build-essential \
                        curl \
                        git \
+		       vim \
                        libpq-dev \
                        ldap-utils \
                        postgresql-client \
@@ -50,4 +51,4 @@ RUN DATABASE_URL=postgresql:does_not_exist \
     CONJUR_DATA_KEY=$(openssl rand -base64 32) \
     bundle exec rake assets:precompile
 
-ENTRYPOINT [ "conjurctl" ]
+ENTRYPOINT ["/bin/bash", "/opt/conjur-server/initializer.sh"]
