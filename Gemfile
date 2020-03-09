@@ -103,7 +103,9 @@ end
 
 group :development do
   # note: minor version of this needs to match codeclimate channel
-  gem 'rubocop', '~> 0.80', require: false
+  # 9 Mar 2020: rubocop 0.80.1 does not work with codeclimate - returns Invalid
+  # JSON
+  gem 'rubocop', '= 0.79', require: false
 
   gem 'reek', require: false
   gem 'rubocop-checkstyle_formatter', require: false # for Jenkins
