@@ -34,7 +34,7 @@ function recreate_account
   DATE=$(date +"%Y-%m-%d %H:%M:%S,%3N")
   echo "$DATE: Check Status Done - Create Account" >> $SCRIPT_LOG_FILE
   conjurctl account delete myaccount
-  conjurctl account create myaccount > /opt/conjur-server/accountFile
+  conjurctl account create myaccount  |  grep "API key" | awk '{print $5}' > /run/conjur-api-key/accountFile
   DATE=$(date +"%Y-%m-%d %H:%M:%S,%3N")
   echo "$DATE: Account Created" >> $SCRIPT_LOG_FILE
 }
