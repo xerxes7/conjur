@@ -72,6 +72,8 @@ module Possum
     # in logs. It's better to explicitly parse the body where needed.
     config.middleware.delete ActionDispatch::ParamsParser
 
+    OpenSSL.fips_mode=true
+
     def self.is_asset_precompile?
       /assets:precompile/.match?(ARGV.join(' '))
     end

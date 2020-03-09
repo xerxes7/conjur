@@ -1,0 +1,49 @@
+#!/bin/bash -e
+
+# If we're running in jenkins, there will be a conjur.identity file
+# with Conjur creds in it. Otherwise, assume the user's netrc has
+# them.
+if [[ -f /etc/conjur.identity ]]; then
+  netrc=/etc/conjur.identity
+else
+  netrc=$HOME/.netrc
+fi
+
+: ${CONJURRC=/etc/conjur.conf}
+
+conjur_config() {
+  local name=$1; shift
+  grep $name $CONJURRC | awk '{print $2}' | tr -d '"'
+}
+
+export CONJUR_APPLIANCE_URL=$(conjur_config appliance_url)
+export CONJUR_SSL_CERTIFICATE="$(< $(conjur_config cert_file))"
+
+[[ -f "$HOME/.debifyrc" ]] && rc_arg="-v $HOME/.debifyrc:/root/.debifyrc:ro"
+
+: ${DEBIFY_ENVFILE=debify.env}
+[[ -f $DEBIFY_ENVFILE ]] &&  envfile_arg="--env-file $DEBIFY_ENVFILE"
+
+# Mounting docker socket is required because subcommands launch
+# containers.
+#
+# The environment variables can't go into an env-file, because docker
+# doesn't handle env-file variables the same way it handles
+# command-line variables. In particular, when a variable in an
+# env-file is unset in the calling enviroment, it gets set in the
+# container without a value. When such a variable is mentioned on the
+# command line, it doesn't get set in the container.
+tty=$(tty -s && echo "-t" || true)
+docker run -i $tty --rm \
+  -e GLI_DEBUG -e DEBUG \
+  -e CONJUR_APPLIANCE_URL -e CONJUR_SSL_CERTIFICATE \
+  -e GIT_BRANCH -e BRANCH_NAME \
+  -e ARTIFACTORY_USER -e ARTIFACTORY_PASSWORD \
+  ${envfile_arg} \
+  -v $PWD:$PWD -w $PWD \
+  -v /var/run/docker.sock:/var/run/docker.sock \
+  -v ${netrc}:/root/.netrc:ro \
+  ${rc_arg} \
+  ${DEBIFY_ENTRYPOINT+--entrypoint $DEBIFY_ENTRYPOINT} \
+  ${DEBIFY_IMAGE-registry.tld/conjurinc/debify:1.11.4
+} "$@"

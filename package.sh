@@ -1,5 +1,5 @@
 #!/bin/bash -ex
-debify package \
+./docker-debify package \
   --dockerfile=Dockerfile.fpm \
   possum \
   -- \
