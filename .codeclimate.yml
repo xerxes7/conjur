@@ -1,10 +1,155 @@
+# This is our default .CodeClimate.yml, broken out by language. Uncomment the
+# sections that apply to your project.
+
+version: "2"
+
+# non-impacting change
 plugins:
-  rubocop:
+# Cross-language plugins - leave uncommented
+  duplication: # Looks for similar and identical code blocks
     enabled: true
-    channel: rubocop-0-58
+    config:
+      languages:
+        go:
+        java:
+        javascript:
+        php:
+        python:
+#          python_version: 3  # Leave this line commented if using Python 2
+        ruby:
+        swift:
+        typescript:
+
+  fixme: # Flags any FIXME, TODO, BUG, XXX, HACK comments so they can be fixed
+    enabled: true
+    config:
+      strings:
+      - FIXME
+      - TODO
+      - HACK
+      - XXX
+      - BUG
+
+  markdownlint: # Linter for correct markdown in our documentation files
+    enabled: true
+
+# Commonly-used languages - comment out unused languages for faster performance
+# but all of these can be run even if no files of that language are in the repo
+
+# Go
+  gofmt:
+    enabled: true
+  golint:
+    enabled: true
+  govet:
+    enabled: true
+
+# Ruby
+  flog:
+    enabled: true
   reek:
     enabled: true
+  rubocop:
+    enabled: true
+    channel: rubocop-0-79
+
+# Shell scripts
+  shellcheck:
+   enabled: true
+
+# Other languages
+
+# CoffeeScript
+  coffeelint:
+    enabled: true
+
+# CSS
+  csslint:
+    enabled: true
+
+# Groovy
+  codenarc:
+    enabled: true
+
+# Java
+  pmd:
+    enabled: true
+  sonar-java:
+    enabled: true
+    config:
+      sonar.java.source: "7" # ACTION set this to the major version of Java you're using
+
+# Node.js
+  nodesecurity:
+    enabled: true
+
+# PHP
+  phan:
+    enabled: true
+    config:
+      file_extensions: "php"
+  phpcodesniffer:
+    enabled: true
+    config:
+      file_extensions: "php,inc,lib"
+      standards: "PSR1,PSR2,WordPress,WordPress-Core,WordPress-Extra"
+  phpmd:
+    enabled: true
+    config:
+      file_extensions: "php,inc,lib"
+      rulesets: "cleancode,codesize,controversial,naming,unusedcode"
+  sonar-php:
+    enabled: true
+
+# Python 2
+  bandit:
+    enabled: true
+  pep8:
+    enabled: true
+  radon:
+    enabled: true
+    config:
+      python_version: 2
+  sonar-python:
+    enabled: true
+
+# Python 3
+#  bandit:
+#    enabled: true
+#  pep8:
+#    enabled: true
+#  radon:
+#    enabled: true
+#    config:
+#  sonarpython:
+#    enabled: true
+
+
+# Configuration Required Language specific - these will error and abort the
+# codeclimate run if they are turned on and certain files or configuration are
+# missing
+
+# Ruby - requires presence of Gemfile and Gemfile.lock
   bundler-audit:
     enabled: true
+
+# Rails - requires a Rails application (& maybe configuration?)
   brakeman:
     enabled: true
+
+# Chef - requires a cookbook path
+#  foodcritic:
+#    enabled: true
+
+# Java - might require Java code? Errored
+#  checkstyle:
+#    enabled: true
+
+# JavaScript - requires an eslintrc to be created and added to project
+#  eslint:
+#    enabled: true
+#    channel: "eslint-6"
+
+
+# List any files/folders to exclude from checking. Wildcards accepted.
+#exclude_patterns:
