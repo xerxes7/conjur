@@ -58,7 +58,7 @@ class AuthenticateController < ApplicationController
   def login
     result = perform_basic_authn
     raise Unauthorized, "Client not authenticated" unless authentication.authenticated?
-    render text: result.authentication_key
+    render plain: result.authentication_key
   rescue => e
     handle_login_error(e)
   end

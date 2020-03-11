@@ -51,6 +51,11 @@ module Possum
     # Defaults to false in production and test, true otherwise.
     config.sequel.schema_dump = false
 
+    # This setting disables the automatic connect after Rails init. It prevents
+    # rake assets:precompile from triggering a database connection during the
+    # Docker image build.
+    config.sequel.skip_connect = true
+
     # Token authentication is optional for authn routes, and it's not applied at all to authentication.
     config.middleware.use Conjur::Rack::Authenticator,
       optional: [
@@ -67,10 +72,9 @@ module Possum
         /^\/$/
       ]
 
-    # NOTE: removing this middleware is important for security.
-    # ParamsParser can cause data from the body to end up in params and then
-    # in logs. It's better to explicitly parse the body where needed.
-    config.middleware.delete ActionDispatch::ParamsParser
+        # # require 'pry'
+        # # binding.pry
+    # ActionDispatch::Request.parameter_parsers={}
 
     OpenSSL.fips_mode=true
 

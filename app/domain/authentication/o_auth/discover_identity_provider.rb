@@ -1,13 +1,13 @@
 module Authentication
-  module OAuth
+  module AuthnOidc
 
-    Log = LogMessages::Authentication::OAuth
-    Err = Errors::Authentication::OAuth
+    Log ||= LogMessages::Authentication::AuthnOidc
+    Err ||= Errors::Authentication::AuthnOidc
     # Possible Errors Raised:
     #   ProviderDiscoveryTimeout
     #   ProviderDiscoveryFailed
 
-    DiscoverIdentityProvider = CommandClass.new(
+    DiscoverOIDCProvider ||= CommandClass.new(
       dependencies: {
         logger:                    Rails.logger,
         open_id_discovery_service: OpenIDConnect::Discovery::Provider::Config
@@ -23,18 +23,18 @@ module Authentication
       private
 
       def log_provider_uri
-        @logger.debug(Log::IdentityProviderUri.new(@provider_uri))
+        @logger.debug(Log::OIDCProviderUri.new(@provider_uri))
       end
 
       # returns an OpenIDConnect::Discovery::Provider::Config::Resource instance.
       # While this leaks 3rd party code into ours, the only time this Resource
-      # is used is inside of FetchProviderKeys.  This is unlikely change, and hence
+      # is used is inside of FetchProviderCertificate.  This is unlikely change, and hence
       # unlikely to be a problem
       def discover_provider
-        @discovered_provider = @open_id_discovery_service.discover!(@provider_uri).tap do
-          @logger.debug(Log::IdentityProviderDiscoverySuccess.new)
-        end
-      rescue HTTPClient::ConnectTimeoutError, Errno::ETIMEDOUT => e
+        @discovered_provider = @open_id_discovery_service.discover!(@provider_uri)
+        @logger.debug(Log::OIDCProviderDiscoverySuccess.new)
+        @discovered_provider
+      rescue HTTPClient::ConnectTimeoutError => e
         raise_error(Err::ProviderDiscoveryTimeout, e)
       rescue => e
         raise_error(Err::ProviderDiscoveryFailed, e)

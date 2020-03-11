@@ -3,6 +3,15 @@ services:
   pg:
     image: postgres:9.4
     environment:
+      # To avoid the following error:
+      #
+      #   Error: Database is uninitialized and superuser password is not
+      #   specified.  You must specify POSTGRES_PASSWORD for the superuser. Use
+      #   "-e POSTGRES_PASSWORD=password" to set it in "docker run".
+      #
+      #   You may also use POSTGRES_HOST_AUTH_METHOD=trust to allow all
+      #   connections without a password. This is *not* recommended. See
+      #   PostgreSQL documentation about "trust"
       POSTGRES_HOST_AUTH_METHOD: trust
 
   audit:
@@ -30,6 +39,9 @@ services:
       RAILS_ENV:
       CONJUR_LOG_LEVEL: debug
       AUDIT_DATABASE_URL:
+      # TODO: Where should we be running rspec tests from, ideally?
+      # See https://github.com/DatabaseCleaner/database_cleaner#safeguards
+      DATABASE_CLEANER_ALLOW_REMOTE_DATABASE_URL: "true"
     ports:
       - "3000:3000"
       - "1234:1234"

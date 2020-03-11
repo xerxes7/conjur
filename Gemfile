@@ -13,11 +13,11 @@ gem 'base58'
 gem 'iso8601'
 gem 'nokogiri', '>= 1.8.2'
 gem 'puma', '~> 3.12'
-gem 'rack', '~> 1.6.12'
-gem 'rails', '= 4.2.11'
-gem 'rails-api'
+gem 'rack', '~> 2.0'
+gem 'rails', '= 5.2.4.1'
 gem 'rake'
 gem 'sprockets', '~> 3.7.0', '>= 3.7.2'
+gem 'jbuilder', '~> 2.7.0'
 
 gem 'pg'
 gem 'sequel-postgres-schemata', require: false
@@ -28,6 +28,7 @@ gem 'base32-crockford'
 gem 'bcrypt-ruby', '~> 3.0.0'
 gem 'gli', require: false
 gem 'listen'
+gem 'random_password_generator', '= 1.0.0'
 gem 'slosilo', '~> 2.1'
 
 # Explicitly required as there are vulnerabilities in older versions
@@ -43,7 +44,7 @@ gem 'ruby_dep', '= 1.3.1'
 gem 'conjur-api', github: 'cyberark/conjur-api-ruby', branch: 'master'
 gem 'conjur-policy-parser', '>= 3.0.3',
   github: 'conjurinc/conjur-policy-parser', branch: 'possum'
-gem 'conjur-rack', '~> 3.1'
+gem 'conjur-rack', '~> 4'
 gem 'conjur-rack-heartbeat'
 gem 'rack-rewrite'
 
@@ -53,13 +54,14 @@ gem 'rack-rewrite'
 gem 'simplecov', require: false
 
 gem 'sass-rails'
-gem 'therubyracer'
+gem 'mini_racer'
 gem 'uglifier'
 #gem 'coffee-rails'
 gem 'autoprefixer-rails'
 gem 'bootstrap-sass', '~> 3.4.0'
-gem 'dry-struct'
-gem 'font-awesome-sass', '~> 5.12.0'
+gem 'dry-struct', '~> 0.4.0'
+gem 'dry-types', '~> 0.12.2'
+gem 'font-awesome-sass', '~> 4.7.0'
 gem 'net-ldap'
 
 # for AWS rotator
@@ -74,7 +76,6 @@ gem 'kubeclient'
 gem 'websocket-client-simple'
 
 # authn-oidc
-gem 'jwt'
 gem 'openid_connect'
 
 group :development, :test do
@@ -89,6 +90,7 @@ group :development, :test do
   gem 'parallel'
   gem 'pry-byebug'
   gem 'pry-rails'
+  gem 'ruby-debug-ide'
   gem 'debase'
   gem 'rails_layout'
   gem 'rake_shared_context'

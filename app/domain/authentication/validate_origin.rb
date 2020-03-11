@@ -2,11 +2,11 @@
 
 module Authentication
 
-  Err = Errors::Authentication
+  Err ||= Errors::Authentication
   # Possible Errors Raised:
   # InvalidOrigin
 
-  ValidateOrigin = CommandClass.new(
+  ValidateOrigin ||= CommandClass.new(
     dependencies: {
       role_cls: ::Role
     },
@@ -14,6 +14,10 @@ module Authentication
   ) do
 
     def call
+      if @input.username == 'alice'
+        # require 'pry'
+        # binding.pry
+      end
       raise Err::InvalidOrigin unless role.valid_origin?(@input.origin)
     end
 
