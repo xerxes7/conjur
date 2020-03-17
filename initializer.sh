@@ -62,13 +62,29 @@ function create_account_from_other_pod
    DATE=$(date +"%Y-%m-%d %H:%M:%S,%3N")
    echo "$DATE: Check Status Done - Create Account" >> $SCRIPT_LOG_FILE
 
-   CREATION_RESULT=$(conjurctl account create $RESULT)
+   SAVED_ACCOUNT_EXISTS=$(psql postgresql://postgres:postgres@localhost/postgres -c "select count(*) from configTable" | grep -c 1)
 
-   STATUS=$( echo "$CREATION_RESULT" | grep -c "already exists" )
-   if [ "$STATUS"=="0" ]; then
-     echo "$CREATION_RESULT" |  grep "API key" | awk '{print $5}' > /run/conjur-api-key/api-key
+   if [ "SAVED_ACCOUNT_EXISTS"=="0" ]; then
+
+     CREATION_RESULT=$(conjurctl account create $RESULT)
+
+     STATUS=$( echo "$CREATION_RESULT" | grep -c "already exists" )
+     if [ "$STATUS"=="0" ]; then
+       API_KEY=$(echo "$CREATION_RESULT" |  grep "API key" | awk '{print $5}')
+       echo "$API_KEY" > /run/conjur-api-key/api-key
+       DATE=$(date +"%Y-%m-%d %H:%M:%S,%3N")
+       echo "$DATE: Account Created" >> $SCRIPT_LOG_FILE
+     fi
+
+     psql postgresql://postgres:postgres@localhost/postgres -c "CREATE TABLE IF NOT EXISTS configTable (apiKey varchar)"
+     psql postgresql://postgres:postgres@localhost/postgres -c "DELETE * FROM configTable"
+     psql postgresql://postgres:postgres@localhost/postgres -c "INSERT INTO configTable (apiKey) VALUES ('$API_KEY')"
+
+   else
+     SAVED_ACCOUNT_DATA=$(psql postgresql://postgres:postgres@localhost/postgres -c "select apiKey from configTable" | sed -n 3p | tr -d '[:space:]')
+     echo "$SAVED_ACCOUNT_DATA" > /run/conjur-api-key/api-key
      DATE=$(date +"%Y-%m-%d %H:%M:%S,%3N")
-     echo "$DATE: Account Created" >> $SCRIPT_LOG_FILE
+     echo "$DATE: API Key retrueved from DB" >> $SCRIPT_LOG_FILE 
    fi
    rm -rf /run/conjur-api-key/account-command
 }
