@@ -5,19 +5,13 @@ class AuthenticateController < ApplicationController
   include AuthorizeResource
 
   def index
-    authenticators = {
-      # Installed authenticator plugins
-      installed: installed_authenticators.keys.sort,
-
-      # Authenticator webservices created in policy
-      configured:
-        Authentication::InstalledAuthenticators.configured_authenticators.sort,
-
-      # Authenticators white-listed in CONJUR_AUTHENTICATORS
-      enabled: enabled_authenticators.sort
-    }
-
-    render json: authenticators
+    OpenSSL.fips_mode = true
+    puts ActiveSupport::Digest.hexdigest("hello friend")
+    #::Digest::MD5.hexdigest("hello friend")
+    puts "Hello World"
+    #render json: "{}"
+    #require 'pry'
+    #binding.pry
   end
 
   def status
