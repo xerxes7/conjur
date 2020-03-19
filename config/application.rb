@@ -56,6 +56,8 @@ module Possum
     # Docker image build.
     config.sequel.skip_connect = true
 
+    config.active_support.use_sha1_digests = true
+
     # Token authentication is optional for authn routes, and it's not applied at all to authentication.
     config.middleware.use Conjur::Rack::Authenticator,
       optional: [
