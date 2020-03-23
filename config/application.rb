@@ -37,7 +37,7 @@ module Possum
     # config.i18n.default_locale = :de
 
     Digest = OpenSSL::Digest # override the default Digest with OpenSSL::Digest
-    OpenSSL.fips_mode=true
+    OpenSSL.fips_mode = true
     ActiveSupport::Digest.hash_digest_class = OpenSSL::Digest::SHA1.new
 
     config.autoload_paths << Rails.root.join('lib')
