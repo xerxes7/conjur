@@ -16,6 +16,15 @@ GIT
       activesupport
       rest-client
 
+GIT
+  remote: https://github.com/cyberark/slosilo.git
+  revision: 3ce56835c2ccf0838fd2ff0c28e0f2e88e04a6b9
+  branch: sha256
+  specs:
+    conjur-api (5.3.2)
+      activesupport
+      rest-client
+
 GEM
   remote: https://rubygems.org/
   specs:
@@ -131,7 +140,7 @@ GEM
     conjur-rack (4.0.0)
       conjur-api (< 6)
       rack (~> 2)
-      slosilo (~> 2.1)
+      slosilo!
     conjur-rack-heartbeat (2.2.0)
       rack
     contracts (0.16.0)
@@ -425,7 +434,7 @@ GEM
       docile (~> 1.1)
       simplecov-html (~> 0.11)
     simplecov-html (0.12.0)
-    slosilo (2.1.1)
+    slosilo!
     spring (2.1.0)
     spring-commands-cucumber (1.0.1)
       spring (>= 0.9.1)
@@ -544,7 +553,7 @@ DEPENDENCIES
   sequel-postgres-schemata
   sequel-rails
   simplecov
-  slosilo (~> 2.1)
+  slosilo!
   spring
   spring-commands-cucumber
   spring-commands-rspec
