@@ -10,6 +10,8 @@ ENV["RAILS_ENV"] ||= 'test'
 ENV["CONJUR_LOG_LEVEL"] ||= 'debug'
 require File.expand_path("../../config/environment", __FILE__)
 require 'rspec/rails'
+require 'digest'
+require 'openssl'
 
 # Requires supporting ruby files with custom matchers and macros, etc,
 # in spec/support/ and its subdirectories.
@@ -21,6 +23,12 @@ ENV.delete('CONJUR_ADMIN_PASSWORD')
 $LOAD_PATH << '../app/domain'
 
 RSpec.configure do |config|
+  config.before(:all) do
+    Digest = OpenSSL::Digest # override the default Digest with OpenSSL::Digest
+    OpenSSL.fips_mode = true
+    ActiveSupport::Digest.hash_digest_class = OpenSSL::Digest::SHA1.new
+  end
+
   config.before(:suite) do
     DatabaseCleaner.strategy = :transaction
   end
