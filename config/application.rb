@@ -22,11 +22,7 @@ Bundler.require(*Rails.groups)
 $LOAD_PATH.push File.expand_path "../../engines/conjur_audit/lib", __FILE__
 require 'conjur_audit'
 
-require 'digest'
-require 'openssl'
-Digest = OpenSSL::Digest # override the default Digest with OpenSSL::Digest
-OpenSSL.fips_mode = true
-ActiveSupport::Digest.hash_digest_class = OpenSSL::Digest::SHA1.new
+
 
 module Possum
   class Application < Rails::Application

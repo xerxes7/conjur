@@ -43,8 +43,11 @@ services:
     ports:
       - "3000:3000"
       - "1234:1234"
+      - "26168:26168"
     expose:
       - "3000"
+      - "1234"
+      - "26168"
     volumes:
     - ..:/src/conjur-server
     - ../../conjur-policy-parser:/src/conjur-policy-parser
