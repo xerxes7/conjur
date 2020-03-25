@@ -1,6 +1,5 @@
 # frozen_string_literal: true
-require 'digest'
-require 'openssl'
+
 
 require File.expand_path('../boot', __FILE__)
 
@@ -21,8 +20,6 @@ Bundler.require(*Rails.groups)
 # Workaround for debify not being able to use embedded gems.
 $LOAD_PATH.push File.expand_path "../../engines/conjur_audit/lib", __FILE__
 require 'conjur_audit'
-
-
 
 module Possum
   class Application < Rails::Application
