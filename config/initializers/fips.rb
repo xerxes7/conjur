@@ -2,7 +2,9 @@ require 'digest'
 require 'openssl'
 require 'sprockets'
 # override the default Digest with OpenSSL::Digest
-Digest = OpenSSL::Digest
+Digest::SHA256 = OpenSSL::Digest::SHA256
+Digest::SHA1 = OpenSSL::Digest::SHA1
+
 OpenSSL.fips_mode = true
 ActiveSupport::Digest.hash_digest_class = OpenSSL::Digest::SHA1.new
 Sprockets::DigestUtils.module_eval do
