@@ -103,6 +103,7 @@ group :development, :test do
   gem 'spring-commands-cucumber'
   gem 'spring-commands-rspec'
   gem 'table_print'
+  gem 'cucumber-rails', require: false
 end
 
 group :development do

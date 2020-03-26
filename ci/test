@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-set -e
+set -ex
 
 export REPORT_ROOT=/src/conjur-server
 # Create default value if not set: allows compose to run in isolated namespace
