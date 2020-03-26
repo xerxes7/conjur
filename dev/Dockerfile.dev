@@ -45,6 +45,9 @@ WORKDIR /src/conjur-server
 ADD Gemfile      .
 ADD Gemfile.lock .
 
+RUN bundle update --conservative ruby-debug-ide
+RUN bundle update --conservative debase
+
 RUN bundle
 
 RUN rm /etc/service/sshd/down
