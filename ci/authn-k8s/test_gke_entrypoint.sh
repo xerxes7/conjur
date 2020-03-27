@@ -161,8 +161,9 @@ function loadConjurPolicies() {
   sleep 5
   kubectl exec $cli_pod -- conjur authn login -u admin -p $API_KEY
 
+  # while loop is to generate some output to prevent the exec from timing out
   # load policies
-  kubectl exec $cli_pod -- conjur policy load root /policies/policy.${TEMPLATE_TAG}yml
+  kubectl exec $cli_pod -- bash -c "{ while :; do sleep 60; echo \"waiting for policy to load\"; done; } & conjur policy load root /policies/policy.${TEMPLATE_TAG}yml; kill %+"
 
   # init ca certs
   conjur_pod=$(kubectl get pod -l app=conjur-authn-k8s --no-headers | grep Running | awk '{ print $1 }')
