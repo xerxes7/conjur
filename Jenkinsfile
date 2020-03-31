@@ -1,5 +1,5 @@
 #!/usr/bin/env groovy
-
+@Library('conjur@conjurinc-ops-575') _
 pipeline {
   agent { label 'executor-v2' }
 
