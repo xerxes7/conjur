@@ -101,7 +101,7 @@ GEM
     backports (3.16.0)
     base32-crockford (0.1.0)
     base58 (0.2.3)
-    bcrypt-ruby (3.0.1)
+    bcrypt (3.1.13)
     bindata (2.4.4)
     bootstrap-sass (3.4.1)
       autoprefixer-rails (>= 5.2.1)
@@ -511,7 +511,7 @@ DEPENDENCIES
   aws-sdk-iam
   base32-crockford
   base58
-  bcrypt-ruby (~> 3.0.0)
+  bcrypt (~> 3.1.2)
   bootstrap-sass (~> 3.4.0)
   ci_reporter_rspec
   command_class

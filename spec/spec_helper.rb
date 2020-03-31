@@ -39,6 +39,13 @@ RSpec.configure do |config|
     end
     new_sprockets_config[:digest_class] = OpenSSL::Digest::SHA256
     Sprockets.config = new_sprockets_config.freeze
+
+    # Remove pre-existing constants if they do exist to reduce the
+    # amount of log spam and warnings.
+    # Digest.send(:remove_const, "SHA1") if Digest.const_defined?("SHA1")
+    Digest.const_set("SHA1", OpenSSL::Digest::SHA1)
+    # OpenSSL::Digest.send(:remove_const, "MD5") if OpenSSL::Digest.const_defined?("MD5")
+    OpenSSL::Digest.const_set("MD5", Digest::MD5)
   end
 
   config.before(:suite) do
