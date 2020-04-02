@@ -125,6 +125,13 @@ pipeline {
         stage('Audit') {
           steps { sh 'ci/test rspec_audit'}
         }
+        stage('Stop!') {
+          steps {
+            input {
+              message "Hammer Time"
+            }
+          }
+        }
       }
       post {
         always {
