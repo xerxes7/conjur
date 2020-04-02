@@ -127,9 +127,7 @@ pipeline {
         }
         stage('Stop!') {
           steps {
-            input {
-              message: "Hammer Time"
-            }
+            input message: "Hammer Time"
           }
         }
       }
