@@ -52,7 +52,7 @@ pipeline {
       }
     }
 
-    stage('Run Tests') {
+    stage('Test Batch 1') {
       parallel {
         stage('RSpec') {
           steps { sh 'ci/test rspec' }
@@ -110,6 +110,10 @@ pipeline {
             }
           }
         }
+      }
+    }
+    stage('Test Batch 2'){
+      parallel {
         stage('Policy') {
           steps { sh 'ci/test cucumber_policy' }
         }
@@ -124,12 +128,6 @@ pipeline {
         }
         stage('Audit') {
           steps { sh 'ci/test rspec_audit'}
-        }
-      }
-      post {
-        always {
-          junit 'spec/reports/*.xml,spec/reports-audit/*.xml,cucumber/api/features/reports/**/*.xml,cucumber/policy/features/reports/**/*.xml,cucumber/authenticators/features/reports/**/*.xml'
-          cucumber fileIncludePattern: '**/cucumber_results.json', sortingMethod: 'ALPHABETICAL'
         }
       }
     }
@@ -178,6 +176,8 @@ pipeline {
       }
     }
     always {
+      junit 'spec/reports/*.xml,spec/reports-audit/*.xml,cucumber/api/features/reports/**/*.xml,cucumber/policy/features/reports/**/*.xml,cucumber/authenticators/features/reports/**/*.xml'
+      cucumber fileIncludePattern: '**/cucumber_results.json', sortingMethod: 'ALPHABETICAL'
       cleanupAndNotify(currentBuild.currentResult, '#conjur-core', '', true)
     }
   }
