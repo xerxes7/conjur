@@ -3,6 +3,7 @@ require "digest"
 require "digest/sha1"
 require "digest/md5"
 require 'sprockets'
+require 'openid_connect'
 
 # override the default Digest with OpenSSL::Digest
 Digest::SHA256 = OpenSSL::Digest::SHA256
@@ -22,6 +23,13 @@ Sprockets.config.each do |key, val|
 end
 new_sprockets_config[:digest_class] = OpenSSL::Digest::SHA256
 Sprockets.config = new_sprockets_config.freeze
+
+OpenIDConnect::Discovery::Provider::Config::Resource.module_eval do
+  def cache_key
+    sha256 = Digest::SHA256.hexdigest host
+    "swd:resource:opneid-conf:#{sha256}"
+  end
+end
 
 # Remove pre-existing constants if they do exist to reduce the
 # amount of log spam and warnings.
