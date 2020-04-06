@@ -40,6 +40,13 @@ RSpec.configure do |config|
     new_sprockets_config[:digest_class] = OpenSSL::Digest::SHA256
     Sprockets.config = new_sprockets_config.freeze
 
+    OpenIDConnect::Discovery::Provider::Config::Resource.module_eval do
+      def cache_key
+        sha256 = Digest::SHA256.hexdigest host
+        "swd:resource:opneid-conf:#{sha256}"
+      end
+    end
+
     # Remove pre-existing constants if they do exist to reduce the
     # amount of log spam and warnings.
     # Digest.send(:remove_const, "SHA1") if Digest.const_defined?("SHA1")
