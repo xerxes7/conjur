@@ -36,6 +36,8 @@ RUN ["/bin/bash", "-c",  "source /usr/local/rvm/scripts/rvm; rvm install ruby-2.
 ENV PATH "/usr/local/rvm/rubies/ruby-2.5.7/bin:/usr/local/ssl/bin:${PATH}"
 RUN ln -sf /usr/local/rvm/rubies/ruby-2.5.7/bin/ruby /usr/bin/ruby2.5
 
+RUN rmdir /usr/local/ssl/certs && ln -sf /etc/ssl/certs/ /usr/local/ssl/
+
 RUN gem install rake
 RUN gem install http -v4.2.0
 
