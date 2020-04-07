@@ -37,7 +37,22 @@ class CredentialsController < ApplicationController
     password = request.body.read
 
     @role.credentials.password = password
-    @role.credentials.save(raise_on_save_failure: true)
+
+    save_error = nil
+    
+    begin
+      @role.credentials.save(raise_on_save_failure: true)
+    rescue Sequel::ValidationFailed => e
+      save_error = e
+    end
+
+    Audit::Event::ChangePassword.new(
+      user: @role,
+      success: save_error.nil?
+    ).log_to Audit.logger
+
+    raise save_error if save_error.present?
+    
     head 204
   end
   
